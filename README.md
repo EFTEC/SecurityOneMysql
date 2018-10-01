@@ -1,16 +1,27 @@
 # SecurityOneMysql
-It's a security framework for php. It includes a login screen that could be customized.
+It's a security framework for PHP. It includes a login screen that could be customized.
 
 ## Features
 - Read user from the database.
-- Role base security (optional)
+- Role-based security (optional)
 - Group base security (optional)
 - Login screen
 - Remember password (via cookie). The cookie doesn't store the user or password but a token).
+- Register screen
+- Activate (after register) screen. The activation is via email.
+- Remember the password screen.  It also uses an activation email.
+
 
 It is totally a beta version. Features could change.
 
-![login](doc/login.png)
+![login](doc/login.png)  
+Login Screen
+
+![register](doc/register.png)  
+Register Screen
+
+
+
 
 ## version
 
@@ -18,4 +29,4 @@ It is totally a beta version. Features could change.
 
 ## Note
  
-It's distributed as dual license, as lgpl-v3 and commercial. You can use in commercial/close source project.
+It's distributed as dual license, as lgpl-v3 and commercial. You can use in a commercial and closed source project.
