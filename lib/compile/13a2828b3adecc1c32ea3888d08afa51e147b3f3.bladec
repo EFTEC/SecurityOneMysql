@@ -1,0 +1,47 @@
+<?php echo $this->runChild("_head",['title'=>"Register Screen"]); ?>
+<body>
+<form class="form-signin" method="post">
+ <div class="text-center mb-4">
+ <img class="mb-4 img-fluid" src="<?php echo static::e($logo); ?>" alt="">
+ <h1 class="h3 mb-3 font-weight-normal"><?php echo $title; ?></h1>
+ <p><?php echo $subtitle; ?></p>
+ </div>
+
+ <div class="form-label-group">
+ <input type="text" id="user" name="user" class="form-control" placeholder="user" required autofocus value="<?php echo static::e(@$obj['user']); ?>">
+ <label for="user">User</label>
+ <?php if($error->get('user')->countError()): ?><em class="text-danger"><?php echo static::e($error->get('user')->firstError()); ?></em><?php endif; ?>
+ </div>
+
+ <div class="form-label-group">
+ <input type="password" id="password" name="password" class="form-control" placeholder="Password" required value="<?php echo static::e(@$obj['password']); ?>">
+ <label for="password">Password</label>
+ <?php if($error->get('password')->countError()): ?><em class="text-danger"><?php echo static::e($error->get('password')->firstError()); ?></em><?php endif; ?>
+ </div>
+
+ <div class="form-label-group">
+ <input type="password" id="password2" name="password2" class="form-control" placeholder="Password" required value="<?php echo static::e(@$obj['password2']); ?>">
+ <label for="password2">Repeat Password</label>
+ <?php if($error->get('password2')->countError()): ?><em class="text-danger"><?php echo static::e($error->get('password2')->firstError()); ?></em><?php endif; ?>
+ </div>
+
+ <div class="form-label-group">
+ <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Nombre" required value="<?php echo static::e(@$obj['fullname']); ?>">
+ <label for="fullname">Name</label>
+ <?php if($error->get('fullname')->countError()): ?><em class="text-danger"><?php echo static::e($error->get('fullname')->firstError()); ?></em><?php endif; ?>
+ </div>
+
+ <div class="form-label-group">
+ <input type="email" id="email" name="email" class="form-control" placeholder="Email" required value="<?php echo static::e(@$obj['email']); ?>">
+ <label for="email">Email</label>
+ <?php if($error->get('email')->countError()): ?><em class="text-danger"><?php echo static::e($error->get('email')->firstError()); ?></em><?php endif; ?>
+ </div>
+
+ <input type="hidden" name="returnUrl" value="<?php echo static::e($returnUrl); ?>" />
+ <button class="btn btn-lg btn-primary btn-block" name="button" value="1" type="submit">Sign in</button>
+ <p class="mt-5 mb-3 text-muted text-center"><?php echo static::e($message); ?></p>
+
+
+</form>
+</body>
+</html>

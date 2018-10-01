@@ -1,0 +1,13 @@
+<?php echo $this->runChild("_head",['title'=>"Register Screen"]); ?>
+<body>
+<form class="form-signin" method="post">
+ <div class="text-center mb-4">
+ <img class="mb-4 img-fluid" src="<?php echo static::e($logo); ?>" alt="" >
+ <h1 class="h3 mb-3 font-weight-normal"><?php echo $title; ?></h1>
+ <p><?php echo $subtitle; ?></p>
+ <hr>
+ <div><?php echo static::e($message); ?></div>
+ </div>
+</form>
+</body>
+</html>
