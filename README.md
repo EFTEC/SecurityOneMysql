@@ -25,6 +25,7 @@ Register Screen
 
 ## version
 
+20181015 0.15 Updated the version of SecurityOne() to 2.x
 20181015 0.14 Updated the version of ValidationOne()
 20181015 ~~0.13 Some changes~~
 20181003 0.12 Some changes

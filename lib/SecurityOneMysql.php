@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 0.14 20181015
+ * @version 0.15 20181015
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -390,9 +390,8 @@ class SecurityOneMysql extends SecurityOne
      * Validate if the user is logged.
      * If it is not logged and it's not in the login page, then it's redirected to the login page
      * If it is logged and it's in the login page, then it's redirected to the frontpage
-     * @param bool $useView
      */
-    public function validate($useView=false) {
+    public function validate() {
         $currFile=basename($_SERVER['PHP_SELF']);
         $inLoginPage=($currFile==$this->loginPage);
 
@@ -510,9 +509,8 @@ class SecurityOneMysql extends SecurityOne
     }
 
     /**
-     * @param $uid
-     * @param $idUser
-     * @param $status
+     * Delete activation stored in the db by uid
+     * @param $uid string
      * @throws \Exception
      */
     public function deleteActivation($uid) {
@@ -679,7 +677,7 @@ class SecurityOneMysql extends SecurityOne
             if ($button) {
                 $msg = "It is the activation code $uid";
                 try {
-                    $this->sendMail($this->email, $this->name, "Activation Code", $msg);
+                    $this->sendMail($this->email, $this->fullName, "Activation Code", $msg);
                 } catch (Exception $e) {
                     $message = "We are unable to send an email, active it here";
                 }
@@ -716,7 +714,7 @@ class SecurityOneMysql extends SecurityOne
 
         $blade=$this->blade();
 
-        $id=$this->val->type('integer')->default(0)->ifFailThenDefault()->get('id');
+        $id=$this->val->type('integer')->def(0)->ifFailThenDefault()->get('id');
         $icon=$iconFail;
         $message="";
         try {
@@ -762,7 +760,7 @@ class SecurityOneMysql extends SecurityOne
 
         $blade=$this->blade();
 
-        $id=$this->val->type('integer')->default(0)->ifFailThenDefault()->get('id');
+        $id=$this->val->type('integer')->def(0)->ifFailThenDefault()->get('id');
         $icon=$iconFail;
         $message="";
         $valid=true;
@@ -780,7 +778,11 @@ class SecurityOneMysql extends SecurityOne
 
         if ($message=="") {
             $idUser=$activate['iduser'];
-            $r=$this->getUserFromDB(null,$idUser);
+            try {
+                $r = $this->getUserFromDB(null, $idUser);
+            } catch (\Exception $e) {
+                $r=false;
+            }
             if ($r===false) {
                 $message="Usuario no encontrado";
                 $valid=false;
@@ -822,7 +824,7 @@ class SecurityOneMysql extends SecurityOne
             echo "error showing register page";
         }
     }
-    public function logoutScreen($useView=false) {
+    public function logoutScreen() {
         if ($_COOKIE['phpcookiesess']) {
             $this->cookieID=$_COOKIE['phpcookiesess'];
             try {
