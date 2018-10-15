@@ -5,7 +5,14 @@ use eftec\SecurityOneMysql;
 include "../vendor/eftec/securityone/lib/SecurityOne.php";
 include "../vendor/eftec/bladeone/lib/BladeOne.php";
 include "../vendor/eftec/daoone/lib/DaoOne.php";
+include "../vendor/eftec/validationone/lib/ValidationOne.php";
+include "../vendor/eftec/validationone/lib/ValidationItem.php";
+include "../vendor/eftec/validationone/lib/MessageItem.php";
+include "../vendor/eftec/validationone/lib/MessageList.php";
+include "../vendor/phpmailer/phpmailer/src/PHPMailer.php";
 include "../lib/SecurityOneMysql.php";
+
+echo "<h1>Initializing. Some errors are ok</h1>";
 
 $conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 $conn->logLevel=2;

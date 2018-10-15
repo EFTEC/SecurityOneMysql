@@ -25,6 +25,9 @@ Register Screen
 
 ## version
 
+20181015 0.14 Updated the version of ValidationOne()
+20181015 ~~0.13 Some changes~~
+20181003 0.12 Some changes
 20180930 0.11 Beta version.
 
 ## Note

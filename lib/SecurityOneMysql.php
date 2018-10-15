@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 0.11 20180930
+ * @version 0.14 20181015
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -26,11 +26,16 @@ class SecurityOneMysql extends SecurityOne
     var $conn;
     /** @var ValidationOne */
     var $val;
-    /** @var ErrorList */
-    var $errorList;
+    /** @var MessageList */
+    var $messageList;
     /** @var PHPMailer */
     var $emailServer;
-
+    /** @var bool if it uses group or not. */
+    var $hasGroup=true;
+    var $defaultGroup=['user'];
+    /** @var bool if it uses group or not. */
+    var $hasRole=true;
+    var $defaultRole='user';
 
     /** @var string it is where the template will be located. By default it searhces in the /lib folder */
     var $templateRoot="";
@@ -43,7 +48,14 @@ class SecurityOneMysql extends SecurityOne
     public $activatePage="activate.php"; // the email points here.
     public $recoverPage="recoverPassword.php"; //send me a new password.
     public $changePage="changePassword.php"; //Change the password (after validation).
-
+    /** @var array It is the real name of the columns in the database */
+    public $userMap=['iduser'=>'iduser'
+        ,'user'=>'user'
+        ,'password'=>'password'
+        ,'role'=>'role'
+        ,'status'=>'status'
+        ,'fullname'=>'fullname'
+        ,'email'=>'email'];
 
     /** @var array pages that are whitelisted (you could access without a session) */
     var $whiteList=["login.php","logout.php","register.php","activate.php"
@@ -64,8 +76,10 @@ class SecurityOneMysql extends SecurityOne
      * @param DaoOne $conn
      * @param string $templateRoot
      * @param array $emailConfig ['user','password','name','smtpserver','smtpport']
+     * @param bool $hasGroup
+     * @param bool $hasRole
      */
-    public function __construct($conn=null,$templateRoot=null,$emailConfig=null)
+    public function __construct($conn=null,$templateRoot=null,$emailConfig=null,$hasGroup=true,$hasRole=true)
     {
         // injecting
         if ($conn===null) {
@@ -77,21 +91,23 @@ class SecurityOneMysql extends SecurityOne
         } else {
             $this->conn=$conn;
         }
-        
+        $this->hasGroup=$hasGroup;
+        $this->hasRole=$hasRole;
+
         if (!$emailConfig) {
             if (function_exists('getEmail')) {
                 // its injected
                 $this->email=getEmail();
             } else {
                 // it's created with constants (if any)
-                $this->emailConfig=['user'=>EFTEC_EMAIL_USER,
-                    'password'=>EFTEC_EMAIL_PASSWORD,
-                    'smtpserver'=>EFTEC_EMAIL_SMPTSERVER
-                    ,'smtpport'=>EFTEC_EMAIL_SMPTPORT
-                    ,'from'=>EFTEC_EMAIL_FROM
-                    ,'fromname'=>EFTEC_EMAIL_FROMNAME
+                $this->emailConfig=['user'=>@EFTEC_EMAIL_USER,
+                    'password'=>@EFTEC_EMAIL_PASSWORD,
+                    'smtpserver'=>@EFTEC_EMAIL_SMPTSERVER
+                    ,'smtpport'=>@EFTEC_EMAIL_SMPTPORT
+                    ,'from'=>@EFTEC_EMAIL_FROM
+                    ,'fromname'=>@EFTEC_EMAIL_FROMNAME
                     ];
-                if (defined(EFTEC_EMAIL_REPLY)) {
+                if (defined(@EFTEC_EMAIL_REPLY)) {
                     $this->emailConfig['reply']=EFTEC_EMAIL_REPLY;
                     $this->emailConfig['replyname']=EFTEC_EMAIL_REPLYNAME;
                 }
@@ -135,18 +151,19 @@ class SecurityOneMysql extends SecurityOne
             return $idUser;
         });
         // injecting
-        if (function_exists('getVal')) {
-            $this->val=getVal();
+        if (function_exists('valid')) {
+            $this->val=valid();
         } else {
-
             $this->val=new ValidationOne();
         }
         // injecting
-        if (function_exists('getErrorList')) {
-            $this->errorList=getErrorList();
+        if (function_exists('messages')) {
+            $this->messageList=messages();
         } else {
-            $this->errorList=new ErrorList();
+            $this->messageList=new MessageList();
         }
+
+
 
     }
     private function createEmailServer() {
@@ -225,11 +242,20 @@ class SecurityOneMysql extends SecurityOne
      */
     private function getUserFromDB($user=null,$idUser=null, $password=null,$email=null) {
         // load the user from the database
-        $this->conn->select("*")
+        $selectRole=($this->hasRole)?"`{$this->userMap['role']}` as `role`,":"";
+        $this->conn->select("`{$this->userMap['iduser']}` as `iduser`,
+            `{$this->userMap['user']}` as `user`,
+            `{$this->userMap['password']}` as `password`,
+            $selectRole
+            `{$this->userMap['status']}` as `status`,
+            `{$this->userMap['fullname']}` as `fullname`,
+            `{$this->userMap['email']}` as `email`")
             ->from($this->tableUser);
         if ($idUser!==null) $this->conn->where(['iduser'=>$idUser]);
         if ($user!==null) $this->conn->where(['user'=>$user]);
         if ($password!==null) $this->conn->where(['password'=>$password]);
+
+
         if ($email!==null) $this->conn->where(['email'=>$email]);
         try {
             $user = $this->conn->first();
@@ -240,20 +266,26 @@ class SecurityOneMysql extends SecurityOne
             return false;
         } else {
             // load the groups (if any)
-            try {
-                $userxGroup = $this->conn->select("r.name")
-                    ->from($this->tableUserXGroup." ur")
-                    ->join($this->tableGroup." r on ur.idgroup=r.idgroup")
-                    ->where("ur.iduser=?", ['i', @$user['iduser']])
-                    ->toList();
-            } catch (\Exception $e) {
-                $this->conn->throwError($e->getMessage());
-                return false;
+            if ($this->hasGroup) {
+                try {
+                    $userxGroup = $this->conn->select("r.name")
+                        ->from($this->tableUserXGroup . " ur")
+                        ->join($this->tableGroup . " r on ur.idgroup=r.idgroup")
+                        ->where("ur.iduser=?", ['i', @$user['iduser']])
+                        ->toList();
+                } catch (\Exception $e) {
+                    $this->conn->throwError($e->getMessage());
+                    return false;
+                }
+                $groups = [];
+                foreach ($userxGroup as $tmp) {
+                    $groups[] = $tmp['name'];
+                }
+            } else {
+                $groups = [];
             }
-            $groups=[];
-            foreach($userxGroup as $tmp) {
-                $groups[]=$tmp['name'];
-            }
+
+
             $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,$user['role'],$user['status'],$user['email'],$user['iduser']);
             return true;
         }
@@ -294,7 +326,7 @@ class SecurityOneMysql extends SecurityOne
         try {
             $this->conn->startTransaction();
             $idUser = $this->addUserOnly($user);
-            $this->addUserxGroup($idUser,$idGroup);
+            if ($this->hasGroup) $this->addUserxGroup($idUser,$idGroup);
             $this->conn->commit();
         } catch (\Exception $e) {
             if ($this->conn->transactionOpen) $this->conn->rollback();
@@ -304,17 +336,22 @@ class SecurityOneMysql extends SecurityOne
     }
 
     /**
-     * @param array $user ['user'=>'name','password'=>'pwd','role'=>'AAA','fullname'=>'fullname','email'=>'email']
+     * @param array['user'=>'name','password'=>'pwd','role'=>'AAA','fullname'=>'fullname','email'=>'email'] $user
      * @return mixed
      * @throws \Exception
      */
     private function addUserOnly($user) {
-        $oldPwd=$user['password']; // backup the password without encryption
-        $user['password']=$this->encrypt($user['password']);
-        $r=$this->conn->set($user)
+        $userDB=[];
+        $userDB[$this->userMap['iduser']]=$user['iduser'];
+        $userDB[$this->userMap['password']]=$this->encrypt($user['password']);
+        $userDB[$this->userMap['user']]=$user['user'];
+        $userDB[$this->userMap['email']]=$user['email'];
+        $userDB[$this->userMap['fullname']]=$user['fullname'];
+        $userDB[$this->userMap['status']]=$user['status'];
+        if ($this->hasRole) $userDB[$this->userMap['role']]=$user['role'];
+        $r=$this->conn->set($userDB)
             ->from($this->tableUser)
             ->insert();
-        $user['password']=$oldPwd; // recover the backup.
         return $r;
     }
 
@@ -437,16 +474,16 @@ class SecurityOneMysql extends SecurityOne
 
     public function validateUser($us) {
         try {
-            if ($this->errorList->errorcount==0) {
+            if ($this->messageList->errorcount==0) {
                 $load = $this->getUserFromDB($us['user']);
                 if ($load!==false) {
-                    $this->errorList->addItem('user','User already exist');
+                    $this->messageList->addItem('user','User already exist');
                     $load=$this->getUserFromDB(null,null,null,$us['email']);
-                    if ($load!==false) $this->errorList->addItem('email','Email already exist');
+                    if ($load!==false) $this->messageList->addItem('email','Email already exist');
                 }
             }
         } catch (\Exception $e) {
-            $this->errorList->addItem('user','It\'s not possible to validate user');
+            $this->messageList->addItem('user','It\'s not possible to validate user');
         }
     }
     protected function generateRandomString($length = 7) {
@@ -485,11 +522,11 @@ class SecurityOneMysql extends SecurityOne
     /**
      * @return BladeOne
      */
-    protected  function getBlade() {
+    protected  function blade() {
 
-        if (function_exists("getBlade")) {
+        if (function_exists("blade")) {
 
-            $blade=getBlade($this->templateRoot."/view",$this->templateRoot."/compile"); // we inject (if any)
+            $blade=blade($this->templateRoot."/view",$this->templateRoot."/compile"); // we inject (if any)
         } else {
             $blade=new BladeOne($this->templateRoot."/view",$this->templateRoot."/compile",BladeOne::MODE_AUTO);
         }
@@ -497,15 +534,12 @@ class SecurityOneMysql extends SecurityOne
     }
 
     public function registerScreen($title="Register Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219?s=200&v=4") {
-        $blade=$this->getBlade();
+        $blade=$this->blade();
 
 
         $button=$this->val->type('string')->post('button');
         $message="";
-        $logged=false;
-
         $user=[];
-
         if ($button) {
             $user=['user'=>$this->val->type('string')
                 ->condition('betweenlen','The %field must have a length between %first and %second',[3,45])
@@ -516,7 +550,8 @@ class SecurityOneMysql extends SecurityOne
                 ,'password2'=>$this->val->type('string')
                     ->condition('betweenlen',"The %field must have a length between %first and %second",[3,64])
                     ->post('password2')
-                ,'role'=>'customer'
+                ,'group'=>$this->defaultGroup
+                ,'role'=>$this->defaultRole
                 ,'fullname'=>$this->val->type('string')
                     ->condition('betweenlen',"The %field must have a length between %first and %second",[3,128])
                     ->post('fullname')
@@ -527,8 +562,8 @@ class SecurityOneMysql extends SecurityOne
                 ->set($user['password2'],'password2');
             $this->validateUser($user);
 
-            //$this->errorList->get(1)->firstError();
-            if ($this->errorList->errorcount) {
+            //$this->messageList->get(1)->firstError();
+            if ($this->messageList->errorcount) {
                 $message="User or password incorrect";
                 $button=false;
             } else {
@@ -537,7 +572,7 @@ class SecurityOneMysql extends SecurityOne
                 try {
                     $message="Unable to create user or activation";
                     $this->conn->startTransaction();
-                    $idUser = $this->addUser($user);
+                    $idUser = $this->addUser($user,$user['group']);
                     $uid=$this->generateRandomString();
                     // we add an activation
                     $this->addActivation($uid,$idUser,1);
@@ -554,7 +589,7 @@ class SecurityOneMysql extends SecurityOne
                     echo $blade->run("registerok", ['title' => $title
                         , 'subtitle' => $subtitle
                         , 'logo' => $logo
-                        , 'error'=>$this->errorList
+                        , 'error'=>$this->messageList
                         , 'message' => $message
                         , 'email' => $user['email']]);
                     die(1);
@@ -568,7 +603,7 @@ class SecurityOneMysql extends SecurityOne
                     'obj'=>$user
                     , 'returnUrl' => $returnUrl
                     , 'message' => $message
-                    , 'error'=>$this->errorList
+                    , 'error'=>$this->messageList
                     , 'title'=>$title
                     , 'subtitle'=>$subtitle
                     , 'logo'=>$logo]);
@@ -584,11 +619,10 @@ class SecurityOneMysql extends SecurityOne
     }
     public function recoverScreen($title="Register Screen",$subtitle="",$icon="",$iconemail="") {
 
-        $blade=$this->getBlade();
+        $blade=$this->blade();
 
         $button=$this->val->type('string')->post('button');
         $message="";
-        $logged=false;
         $user=[];
         switch ($button) {
             case 'user':
@@ -667,7 +701,7 @@ class SecurityOneMysql extends SecurityOne
                     , 'returnUrl' => $returnUrl
                     , 'message' => $message
                     , 'title'=>$title
-                    , 'error'=>$this->errorList
+                    , 'error'=>$this->messageList
                     , 'subtitle'=>$subtitle
                     , 'logo'=>$icon]);
             } catch (\Exception $e) {
@@ -680,7 +714,7 @@ class SecurityOneMysql extends SecurityOne
 
     public function activeScreen($title="Register Screen",$subtitle="",$iconOK="",$iconFail="") {
 
-        $blade=$this->getBlade();
+        $blade=$this->blade();
 
         $id=$this->val->type('integer')->default(0)->ifFailThenDefault()->get('id');
         $icon=$iconFail;
@@ -703,7 +737,11 @@ class SecurityOneMysql extends SecurityOne
                 } catch (\Exception $e) {
                     $message="Unable to change status ".$e->getMessage();
                 }
-                @$this->deleteActivation($id);
+                try {
+                    @$this->deleteActivation($id);
+                } catch (\Exception $e2) {
+                    $message="Unable to delete activation ".$e2->getMessage();
+                }
             } else {
                 $message = "Codigo incorrecto";
             }
@@ -722,7 +760,7 @@ class SecurityOneMysql extends SecurityOne
 
     public function changePasswordScreen($title="Change Password Screen",$subtitle="",$iconOK="",$iconFail="") {
 
-        $blade=$this->getBlade();
+        $blade=$this->blade();
 
         $id=$this->val->type('integer')->default(0)->ifFailThenDefault()->get('id');
         $icon=$iconFail;
@@ -777,7 +815,7 @@ class SecurityOneMysql extends SecurityOne
                 , 'subtitle'=>$subtitle
                 , 'valid'=>$valid
                 , 'home'=>$this->loginPage
-                , 'error'=>$this->errorList
+                , 'error'=>$this->messageList
                 , 'user'=>$user
                 , 'logo'=>$icon]);
         } catch (\Exception $e) {
@@ -787,7 +825,10 @@ class SecurityOneMysql extends SecurityOne
     public function logoutScreen($useView=false) {
         if ($_COOKIE['phpcookiesess']) {
             $this->cookieID=$_COOKIE['phpcookiesess'];
-            @$this->deleteCookie();
+            try {
+                @$this->deleteCookie();
+            } catch (\Exception $e) {
+            }
         }
         $this->logout();
         session_write_close();
@@ -797,18 +838,17 @@ class SecurityOneMysql extends SecurityOne
     public function createTables() {
         $msgError=[];
         try {
+            $sqlRole= ($this->hasRole)? "`{$this->userMap['role']}` VARCHAR(64) NOT NULL,":"";
             $sql= /** @lang text */
                 "CREATE TABLE `{$this->tableUser}` (
-            `iduser` INT NOT NULL,
-            `user` VARCHAR(45) NOT NULL,
-            `password` VARCHAR(64) NOT NULL,
-            `role` VARCHAR(64) NOT NULL,
-            `status` int NOT NULL default 1,
-            `fullname` VARCHAR(128) NOT NULL,
-            `email` VARCHAR(45) NOT NULL,
-            `phone` VARCHAR(45) NULL,
-            `address` VARCHAR(45)  NULL,            
-            PRIMARY KEY (`iduser`));
+            `{$this->userMap['iduser']}` INT NOT NULL,
+            `{$this->userMap['user']}` VARCHAR(45) NOT NULL,
+            `{$this->userMap['password']}` VARCHAR(64) NOT NULL,
+            $sqlRole
+            `{$this->userMap['status']}` int NOT NULL default 1,
+            `{$this->userMap['fullname']}` VARCHAR(128) NOT NULL,
+            `{$this->userMap['email']}` VARCHAR(45) NOT NULL,            
+            PRIMARY KEY (`{$this->userMap['iduser']}`));
             ALTER TABLE `{$this->tableUser}` 
             ADD UNIQUE INDEX `{$this->tableUser}_key1` (`user` ASC) VISIBLE;
             ;";
@@ -836,29 +876,30 @@ class SecurityOneMysql extends SecurityOne
                 $msgError[]= "Note: Table {$this->tableCookie} not created (maybe it exists) ".$e->getMessage()."<br>";
             }
         }
-
-        try {
-            $sql= /** @lang text */
-                "CREATE TABLE `{$this->tableGroup}` (
+        if ($this->hasGroup) {
+            try {
+                $sql = /** @lang text */
+                    "CREATE TABLE `{$this->tableGroup}` (
                 `idgroup` INT NOT NULL,
                 `name` VARCHAR(45) NOT NULL,
                 PRIMARY KEY (`idgroup`));
                 ALTER TABLE ``{$this->tableGroup}`` 
                 ADD UNIQUE INDEX ``{$this->tableGroup}`_key1` (`name` ASC) VISIBLE;";
-            $this->conn->runMultipleRawQuery($sql, true);
-        } catch (\Exception $e) {
-            $msgError[]="Note: Table {$this->tableGroup} not created (maybe it exists) ".$e->getMessage()."<br>";
-        }
-        try {
-            $sql= /** @lang text */
-                "CREATE TABLE `{$this->tableUserXGroup}` (
-                `iduser` INT NOT NULL,
-                `idgroup` VARCHAR(45) NOT NULL,
-                PRIMARY KEY (`iduser`, `idgroup`));
-            ";
-            $this->conn->runRawQuery($sql, array(), false);
-        } catch (\Exception $e) {
-            $msgError[]="Note: Table {$this->tableUserXGroup} not created (maybe it exists) ".$e->getMessage()."<br>";
+                $this->conn->runMultipleRawQuery($sql, true);
+            } catch (\Exception $e) {
+                $msgError[] = "Note: Table {$this->tableGroup} not created (maybe it exists) " . $e->getMessage() . "<br>";
+            }
+            try {
+                $sql= /** @lang text */
+                    "CREATE TABLE `{$this->tableUserXGroup}` (
+                    `iduser` INT NOT NULL,
+                    `idgroup` VARCHAR(45) NOT NULL,
+                    PRIMARY KEY (`iduser`, `idgroup`));
+                ";
+                $this->conn->runRawQuery($sql, array(), false);
+            } catch (\Exception $e) {
+                $msgError[]="Note: Table {$this->tableUserXGroup} not created (maybe it exists) ".$e->getMessage()."<br>";
+            }
         }
 
         try {
@@ -880,7 +921,7 @@ class SecurityOneMysql extends SecurityOne
 
 
     public function loginScreen($title="Login Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219?s=200&v=4") {
-        $blade=$this->getBlade();
+        $blade=$this->blade();
 
         $button=$button=$this->val->type('string')->post('button');
         $message="";
@@ -890,7 +931,7 @@ class SecurityOneMysql extends SecurityOne
                 ,$this->val->type('string')->condition('maxlen',null,64)->post('password')
                 ,(@$this->val->type('string')->post('remember',"boolean")=='1'));
             $message=(!$logged)?"User or password incorrect":"";
-            if (($this->status == 0)) {
+            if ($this->status == 0 && $logged) {
                 $message = "User not active";
                 $logged=false;
             }

@@ -8,6 +8,7 @@ $conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREAT
 
 
 
+
 try {
     $conn->connect();
 
@@ -22,5 +23,5 @@ $sec->validate();
 
 //$sec->createTables();
 
-$sec->loginScreen("It is a login screen","you could change <a href='https://github.com/EFTEC/SecurityOneMysql'>this</a>");
+$sec->loginScreen("It is a login screen","you should <a href='1.initialize.php'>1.initialize.php</a> first. then the user is admin/admin or user/user");
 
