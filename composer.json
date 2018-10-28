@@ -1,7 +1,7 @@
 {
     "name": "eftec/securityonemysql",
     "description": "It's a barebone security class written on PHP",
-    "version": "0.15",
+    "version": "0.16",
     "type": "library",
     "keywords": [
         "security",
@@ -24,11 +24,12 @@
         }
     },
     "require": {
-        "eftec/securityone": "^2.0",
-        "eftec/daoone": "^3.13",
-        "eftec/bladeone": "^3.14",
+        "eftec/securityone": "^2.1",
+        "eftec/daoone": "^3.14",
+        "eftec/bladeone": "^3.16",
         "phpmailer/phpmailer": "^6.0",
-        "eftec/validationone": "^1.8",
+        "eftec/validationone": "^1.11",
         "ext-mysqli": "*"
+
     }
 }

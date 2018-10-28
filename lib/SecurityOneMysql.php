@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 0.15 20181015
+ * @version 0.16 20181027
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -22,6 +22,9 @@ class SecurityOneMysql extends SecurityOne
 {
     // nullval is used when you want to mark a value as not-selected (null) but you can't do it using string "".
     const NULLVAL = '__NULLVAL__';
+
+    var $debug=false;
+
     /** @var DaoOne */
     var $conn;
     /** @var ValidationOne */
@@ -41,10 +44,13 @@ class SecurityOneMysql extends SecurityOne
     var $templateRoot="";
 
     public $loginPage="login.php";
+    public $loginTemplate='login';
     public $logoutPage="logout.php";
     public $initPage="init.php";
 
     public $registerPage="register.php"; // create new account and send an email
+    public $registerTemplate='register';
+    public $registerOkTemplate='registerok';
     public $activatePage="activate.php"; // the email points here.
     public $recoverPage="recoverPassword.php"; //send me a new password.
     public $changePage="changePassword.php"; //Change the password (after validation).
@@ -100,18 +106,24 @@ class SecurityOneMysql extends SecurityOne
                 $this->email=getEmail();
             } else {
                 // it's created with constants (if any)
-                $this->emailConfig=['user'=>@EFTEC_EMAIL_USER,
-                    'password'=>@EFTEC_EMAIL_PASSWORD,
-                    'smtpserver'=>@EFTEC_EMAIL_SMPTSERVER
-                    ,'smtpport'=>@EFTEC_EMAIL_SMPTPORT
-                    ,'from'=>@EFTEC_EMAIL_FROM
-                    ,'fromname'=>@EFTEC_EMAIL_FROMNAME
+                if (defined(EFTEC_EMAIL_SMPTSERVER)) {
+                    $this->emailConfig = ['user' => @EFTEC_EMAIL_USER,
+                        'password' => @EFTEC_EMAIL_PASSWORD,
+                        'smtpserver' => @EFTEC_EMAIL_SMPTSERVER
+                        , 'smtpport' => @EFTEC_EMAIL_SMPTPORT
+                        , 'from' => @EFTEC_EMAIL_FROM
+                        , 'fromname' => @EFTEC_EMAIL_FROMNAME
                     ];
-                if (defined(@EFTEC_EMAIL_REPLY)) {
-                    $this->emailConfig['reply']=EFTEC_EMAIL_REPLY;
-                    $this->emailConfig['replyname']=EFTEC_EMAIL_REPLYNAME;
+                    if (defined(@EFTEC_EMAIL_REPLY)) {
+                        $this->emailConfig['reply'] = EFTEC_EMAIL_REPLY;
+                        $this->emailConfig['replyname'] = EFTEC_EMAIL_REPLYNAME;
+                    }
+                    $this->createEmailServer();
+                } else {
+                    // parameter is null, there is not a global function called getEmail() and constant EFTEC_EMAIL_SMPTSERVER is not defined.
+                    // else, email service is disabled.
+                    $this->emailServer=null;
                 }
-                $this->createEmailServer();
             }
         } else {
             // its created with parameters.
@@ -223,11 +235,9 @@ class SecurityOneMysql extends SecurityOne
         //Attach an image file
         //$this->emailServer->addAttachment('images/phpmailer_mini.png');
         //send the message, check for errors
-        echo "sending<br>";
         if (!$this->emailServer->send()) {
             throw new Exception("Mailer Error: " . $this->emailServer->ErrorInfo);
         } else {
-            echo "sending ok<br>";
             return true;
         }
     }
@@ -242,20 +252,28 @@ class SecurityOneMysql extends SecurityOne
      */
     private function getUserFromDB($user=null,$idUser=null, $password=null,$email=null) {
         // load the user from the database
-        $selectRole=($this->hasRole)?"`{$this->userMap['role']}` as `role`,":"";
+        if ($this->hasRole) {
+            $selectRole="`{$this->userMap['role']}` as `role`,";
+        }else {
+            $selectRole="";
+        }
         $this->conn->select("`{$this->userMap['iduser']}` as `iduser`,
             `{$this->userMap['user']}` as `user`,
             `{$this->userMap['password']}` as `password`,
             $selectRole
             `{$this->userMap['status']}` as `status`,
             `{$this->userMap['fullname']}` as `fullname`,
-            `{$this->userMap['email']}` as `email`")
-            ->from($this->tableUser);
+            `{$this->userMap['email']}` as `email`");
+        if (count($this->extraFields)) {
+            foreach($this->extraFields as $key=>$value) {
+                $value=@$user[$key];
+                $this->conn->select(",`$key`");
+            }
+        }
+        $this->conn->from($this->tableUser);
         if ($idUser!==null) $this->conn->where(['iduser'=>$idUser]);
         if ($user!==null) $this->conn->where(['user'=>$user]);
         if ($password!==null) $this->conn->where(['password'=>$password]);
-
-
         if ($email!==null) $this->conn->where(['email'=>$email]);
         try {
             $user = $this->conn->first();
@@ -265,6 +283,11 @@ class SecurityOneMysql extends SecurityOne
         if (empty($user)) {
             return false;
         } else {
+            if (count($this->extraFields)) {
+                foreach($this->extraFields as $key=>$value) {
+                    $this->extraFields[$key]=@$user[$key];
+                }
+            }
             // load the groups (if any)
             if ($this->hasGroup) {
                 try {
@@ -284,9 +307,7 @@ class SecurityOneMysql extends SecurityOne
             } else {
                 $groups = [];
             }
-
-
-            $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,$user['role'],$user['status'],$user['email'],$user['iduser']);
+            $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,@$user['role'],$user['status'],$user['email'],$user['iduser']);
             return true;
         }
     }
@@ -349,6 +370,11 @@ class SecurityOneMysql extends SecurityOne
         $userDB[$this->userMap['fullname']]=$user['fullname'];
         $userDB[$this->userMap['status']]=$user['status'];
         if ($this->hasRole) $userDB[$this->userMap['role']]=$user['role'];
+        if (count($this->extraFields)) {
+            foreach($this->extraFields as $key=>$value) {
+                $userDB[$key]=$user[$key];
+            }
+        }
         $r=$this->conn->set($userDB)
             ->from($this->tableUser)
             ->insert();
@@ -384,6 +410,16 @@ class SecurityOneMysql extends SecurityOne
         @header("location:" . $this->loginPage.'?returnUrl='.$this->safeReturnUrl(@$_SERVER['REQUEST_URI'],$this->initPage));
         die(1);
     }
+    /**
+     * Logout and the session is destroyed. This redirect to the initial page.
+     */
+    public function logout($redirect=true) {
+        parent::logout();
+        if ($redirect) {
+            @header("location:" . $this->initPage);
+            die(1);
+        }
+    }
 
 
     /**
@@ -391,7 +427,7 @@ class SecurityOneMysql extends SecurityOne
      * If it is not logged and it's not in the login page, then it's redirected to the login page
      * If it is logged and it's in the login page, then it's redirected to the frontpage
      */
-    public function validate() {
+    public function validate($redirect=true) {
         $currFile=basename($_SERVER['PHP_SELF']);
         $inLoginPage=($currFile==$this->loginPage);
 
@@ -415,7 +451,7 @@ class SecurityOneMysql extends SecurityOne
             die(1);
         }
         if (!in_array($currFile,$this->whiteList) && !$this->isLogged) {
-            $this->backLogin();
+            if ($redirect) $this->backLogin();
         }
 
     }
@@ -524,87 +560,92 @@ class SecurityOneMysql extends SecurityOne
 
         if (function_exists("blade")) {
 
-            $blade=blade($this->templateRoot."/view",$this->templateRoot."/compile"); // we inject (if any)
+            $blade=blade($this->templateRoot."/views",$this->templateRoot."/compile"); // we inject (if any)
         } else {
-            $blade=new BladeOne($this->templateRoot."/view",$this->templateRoot."/compile",BladeOne::MODE_AUTO);
+            $blade=new BladeOne($this->templateRoot."/views",$this->templateRoot."/compile",BladeOne::MODE_AUTO);
         }
         return $blade;
     }
 
-    public function registerScreen($title="Register Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219?s=200&v=4") {
+    /**
+     * @param $template
+     * @param array $viewVariables Variables used for the view. For example, a list to fill a select.
+     */
+    public function registerCustomScreen($template, $viewVariables=[]) {
+        $this->registerTemplate=$template;
+        return $this->registerScreen("","","",$viewVariables);
+    }
+    public function registerScreen($title="Register Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219",$viewVariables=[]) {
         $blade=$this->blade();
 
 
         $button=$this->val->type('string')->post('button');
         $message="";
         $user=[];
-        if ($button) {
-            $user=['user'=>$this->val->type('string')
-                ->condition('betweenlen','The %field must have a length between %first and %second',[3,45])
-                ->post('user','Usuario incorrecto')
+        $success=false;
+        if ($button==='register') {
+            $user=[
+                'button'=>$button
+                ,'iduser'=>0
+                ,'user'=>$this->val->type('string')
+                    //->condition('betweenlen','The %field must have a length between %first and %second',[3,45])
+                    ->post('user','Usuario incorrecto')
                 ,'password'=>$this->val->type('string')
-                    ->condition('betweenlen',"The %field must have a length between %first and %second",[3,64])
+                    //->condition('betweenlen',"The %field must have a length between %first and %second",[3,64])
                     ->post('password')
                 ,'password2'=>$this->val->type('string')
-                    ->condition('betweenlen',"The %field must have a length between %first and %second",[3,64])
+                    //->condition('betweenlen',"The %field must have a length between %first and %second",[3,64])
                     ->post('password2')
                 ,'group'=>$this->defaultGroup
                 ,'role'=>$this->defaultRole
                 ,'fullname'=>$this->val->type('string')
-                    ->condition('betweenlen',"The %field must have a length between %first and %second",[3,128])
+                    //->condition('betweenlen',"The %field must have a length between %first and %second",[3,128])
                     ->post('fullname')
                 ,'email'=>$this->val->type('string')
-                    ->condition('minlen',null,3)
-                    ->condition('maxlen',null,45)->post('email')];
+                 //   ->condition('minlen',null,3)
+                //    ->condition('maxlen',null,45)
+                ->post('email')];
+            if (count($this->extraFields)) {
+                foreach($this->extraFields as $key=>$value) {
+                    $user[$key]=$this->val->type('string')
+                        ->initial($value)
+                        ->post($key);
+                }
+            }
             $this->val->type('string')->condition('eq','The passwords aren\'t equals',$user['password'])
                 ->set($user['password2'],'password2');
             $this->validateUser($user);
-
+            $success=false;
             //$this->messageList->get(1)->firstError();
             if ($this->messageList->errorcount) {
-                $message="User or password incorrect";
-                $button=false;
+                $message=$this->messageList->firstErrorText();
+                $success=false;
             } else {
-                unset($user['password2']);
-                $user['status']=0; // not active
-                try {
-                    $message="Unable to create user or activation";
-                    $this->conn->startTransaction();
-                    $idUser = $this->addUser($user,$user['group']);
-                    $uid=$this->generateRandomString();
-                    // we add an activation
-                    $this->addActivation($uid,$idUser,1);
-                    $msg="It is the activation code $uid";
-                    $message="Unable to send email";
-                    $this->sendMail($user['email'], $user['fullname'], "Activation Code", $msg);
-                    $this->conn->commit(false);
-                } catch (\Exception $e) {
-                    $this->conn->rollback(false);
-                    $button=false;
-                }
-
-                if ($button) {
-                    echo $blade->run("registerok", ['title' => $title
-                        , 'subtitle' => $subtitle
-                        , 'logo' => $logo
-                        , 'error'=>$this->messageList
-                        , 'message' => $message
-                        , 'email' => $user['email']]);
-                    die(1);
+                $success=$this->registerNewUser($user,$message,$title,$subtitle,$logo);
+            }
+        } else {
+            if (count($this->extraFields)) {
+                foreach($this->extraFields as $key=>$value) {
+                    $user[$key]=$value; // default value.
                 }
             }
+
         }
-        if (!$button) {
+        if (!$success) {
             $returnUrl=$this->safeReturnUrl(@$_REQUEST['returnUrl'],$this->initPage);
             try {
-                echo $blade->run("register", [
-                    'obj'=>$user
+                $fields=[
+                    'button'=>$button
+                    ,'iduser'=>0
+                    ,'obj'=>$user
                     , 'returnUrl' => $returnUrl
                     , 'message' => $message
                     , 'error'=>$this->messageList
                     , 'title'=>$title
                     , 'subtitle'=>$subtitle
-                    , 'logo'=>$logo]);
+                    , 'logo'=>$logo];
+                $fields=array_merge($fields,$viewVariables);
+                echo $blade->run($this->registerTemplate, $fields);
             } catch (\Exception $e) {
                 echo "error showing register page";
             }
@@ -614,6 +655,51 @@ class SecurityOneMysql extends SecurityOne
             header("location:".$returnUrl);
             die(1);
         }
+    }
+    private function registerNewUser($user,&$message,$title,$subtitle,$logo) {
+        $blade=$this->blade();
+        unset($user['password2']);
+        if ($this->emailServer!==null) {
+            $user['status'] = 1; // there is not an email, so the user is active by default
+        } else {
+            $user['status'] = 0; // not active until email activation.
+        }
+        $success=false;
+        try {
+            $message='';
+            $this->conn->startTransaction();
+            $idUser = $this->addUser($user,$user['group']);
+            $uid=$this->generateRandomString();
+            // we send an activation by email
+            if ($this->emailServer!==null) {
+                $message="Unable to send email";
+                $this->addActivation($uid,$idUser,1);
+                $msg="It is the activation code $uid";
+                $this->sendMail($user['email'], $user['fullname'], "Activation Code", $msg);
+                $message="User created correctly. Please check your email to activate the account";
+            } else {
+                $message="User created and activated correctly";
+            }
+            $this->conn->commit(false);
+            $success=true;
+            // register ok, email was send.
+            echo $blade->run($this->registerOkTemplate, ['title' => $title
+                , 'subtitle' => $subtitle
+                , 'logo' => $logo
+                , 'error'=>$this->messageList
+                , 'message' => $message
+                , 'email' => $user['email']]);
+            die(1);
+        } catch (\Exception $e) {
+            if (!$this->debug) {
+                $message="Unable to create user or activation ";
+            } else {
+                $message="Unable to create user or activation ".$e->getMessage();
+            }
+            $success=false;
+            $this->conn->rollback(false);
+        }
+        return $success;
     }
     public function recoverScreen($title="Register Screen",$subtitle="",$icon="",$iconemail="") {
 
@@ -910,45 +996,72 @@ class SecurityOneMysql extends SecurityOne
             `idactivation` int NOT NULL,
             `iduser` int NOT NULL,
             `status` int NOT NULL,
-            'date' DATETIME NULL DEFAULT CURRENT_TIMESTAMP,           
-            PRIMARY KEY (`idactivation`));
-            ;";
+            `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,           
+            PRIMARY KEY (`idactivation`));";
 
             $this->conn->runMultipleRawQuery($sql, true);
         } catch (\Exception $e) {
-            $msgError[]= "Note: Table {$this->tableActivation} not created (maybe it exists) ".$e->getMessage()."<br>";
+            $msgError[]= "Note: Table {$this->tableActivation} not created (maybe it exists) ".$e->getMessage()."<br>\n$sql<br>";
         }
         return $msgError;
     }
 
+    /**
+     * If you want to use a custom login screen then it must have a :<br>
+     * form(post)<br>
+     * button(name=button)<br>
+     * user(name=password)<br>
+     * password(password)<br>
+     * remember(name=rememeber,value=1) it is optional<br>
+     * @param $template
+     * @param array $viewVariables Variables used for the view. For example, a list to fill a select.
+     */
+    public function loginCustomScreen($template, $viewVariables=[]) {
+        $this->loginTemplate=$template;
+        return $this->loginScreen("","","",$viewVariables);
+    }
 
-    public function loginScreen($title="Login Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219?s=200&v=4") {
+    /**
+     * @param string $title
+     * @param string $subtitle
+     * @param string $logo
+     */
+    public function loginScreen($title="Login Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219", $viewVariables=[]) {
         $blade=$this->blade();
 
         $button=$button=$this->val->type('string')->post('button');
         $message="";
+        $user=$this->val->type('string')->condition('maxlen',null,45)->post('user');
+        $password=$this->val->type('string')->condition('maxlen',null,64)->post('password');
+        $remember=$this->val->type('string')->post('remember',"boolean");
         $logged=false;
-        if ($button) {
-            $logged=$this->login($this->val->type('string')->condition('maxlen',null,45)->post('user')
-                ,$this->val->type('string')->condition('maxlen',null,64)->post('password')
-                ,(@$this->val->type('string')->post('remember',"boolean")=='1'));
+        if ($button==='login') {
+
+            $logged=$this->login($user
+                ,$password
+                ,$remember=='1');
             $message=(!$logged)?"User or password incorrect":"";
             if ($this->status == 0 && $logged) {
                 $message = "User not active";
                 $logged=false;
             }
         }
-        if (!$button || !$logged) {
+        if ($button!=='login' || !$logged) {
             $returnUrl=$this->safeReturnUrl(@$_REQUEST['returnUrl'],$this->initPage);
             try {
-                echo $blade->run("login", ['user' => $this->user
-                    , 'password' => ""
+                $param=[
+                    'button'=>$button
+                    ,'user' => $user
+                    , 'password' => $password
+                    , 'remember'=> $remember
                     , 'returnUrl' => $returnUrl
                     , 'message' => $message
                     , 'title'=>$title
                     , 'subtitle'=>$subtitle
                     , 'logo'=>$logo
-                    , 'useCookie'=>$this->useCookie]);
+                    , 'useCookie'=>$this->useCookie];
+                $param=array_merge($param,$viewVariables);
+                echo $blade->run($this->loginTemplate,$param );
             } catch (\Exception $e) {
                 echo "error showing login page";
             }

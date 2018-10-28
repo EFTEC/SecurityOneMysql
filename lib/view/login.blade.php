@@ -24,7 +24,7 @@
     </div>
     @endif()
     <input type="hidden" name="returnUrl" value="{{$returnUrl}}" />
-    <button class="btn btn-lg btn-primary btn-block" name="button" value="1" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" name="button" value="login" type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted text-center">{{$message}}</p>
 
 
