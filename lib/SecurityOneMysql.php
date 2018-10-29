@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.0 20181027
+ * @version 1.1 20181028
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -85,7 +85,7 @@ class SecurityOneMysql extends SecurityOne
      * @param bool $hasGroup
      * @param bool $hasRole
      */
-    public function __construct($conn=null,$templateRoot=null,$emailConfig=null,$hasGroup=true,$hasRole=true)
+    public function __construct($conn=null,$templateRoot=null,$emailConfig=null,$hasGroup=true,$hasRole=true,$autoLogin=false)
     {
         // injecting
         if ($conn===null) {
@@ -132,7 +132,7 @@ class SecurityOneMysql extends SecurityOne
         }
 
         $this->templateRoot=($templateRoot===null)?dirname(__FILE__):$templateRoot;
-        parent::__construct(true); // if the session exists then it's logged.
+        parent::__construct($autoLogin); // if the session exists then it's logged.
 
         $this->setLoginFn(function(SecurityOneMysql $sec) {
             return $sec->getUserFromDB($sec->user,null,$sec->password);
@@ -307,7 +307,7 @@ class SecurityOneMysql extends SecurityOne
             } else {
                 $groups = [];
             }
-            $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,@$user['role'],$user['status'],$user['email'],$user['iduser']);
+            $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,@$user['role'],$user['status'],$user['email'],$user['iduser'],$this->extraFields);
             return true;
         }
     }
@@ -1072,6 +1072,4 @@ class SecurityOneMysql extends SecurityOne
             die(1);
         }
     }
-
-
 }

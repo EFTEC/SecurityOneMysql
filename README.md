@@ -25,7 +25,8 @@ Register Screen
 
 ## version
 
-* 20181027 1.00 Stable version.
+* 20181028 1.1 It fixes a small bug with the extra fields. Now the extra fields are serialized (if any)
+* 20181027 1.0 Stable version.
 * 20181016 0.16 Changes to login and register screen. Now it's possible to select a different template
 * 20181015 0.15 Updated the version of SecurityOne() to 2.x
 * 20181015 0.14 Updated the version of ValidationOne()
