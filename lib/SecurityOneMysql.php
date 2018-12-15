@@ -2,8 +2,6 @@
 
 namespace eftec;
 
-
-use DateTime;
 use eftec\bladeone\BladeOne;
 
 use PHPMailer\PHPMailer\Exception;
@@ -12,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.1 20181028
+ * @version 1.2 20181215
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -567,14 +565,23 @@ class SecurityOneMysql extends SecurityOne
         return $blade;
     }
 
-    /**
-     * @param $template
-     * @param array $viewVariables Variables used for the view. For example, a list to fill a select.
-     */
+	/**
+	 * @param $template
+	 * @param array $viewVariables Variables used for the view. For example, a list to fill a select.
+	 * @throws \Exception
+	 */
     public function registerCustomScreen($template, $viewVariables=[]) {
         $this->registerTemplate=$template;
         return $this->registerScreen("","","",$viewVariables);
     }
+
+	/**
+	 * @param string $title
+	 * @param string $subtitle
+	 * @param string $logo
+	 * @param array $viewVariables
+	 * @throws \Exception
+	 */
     public function registerScreen($title="Register Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219",$viewVariables=[]) {
         $blade=$this->blade();
 
@@ -615,8 +622,7 @@ class SecurityOneMysql extends SecurityOne
             $this->val->type('string')->condition('eq','The passwords aren\'t equals',$user['password'])
                 ->set($user['password2'],'password2');
             $this->validateUser($user);
-            $success=false;
-            //$this->messageList->get(1)->firstError();
+
             if ($this->messageList->errorcount) {
                 $message=$this->messageList->firstErrorText();
                 $success=false;
@@ -656,6 +662,16 @@ class SecurityOneMysql extends SecurityOne
             die(1);
         }
     }
+
+	/**
+	 * @param $user
+	 * @param $message
+	 * @param $title
+	 * @param $subtitle
+	 * @param $logo
+	 * @return bool
+	 * @throws \Exception
+	 */
     private function registerNewUser($user,&$message,$title,$subtitle,$logo) {
         $blade=$this->blade();
         unset($user['password2']);
@@ -664,7 +680,6 @@ class SecurityOneMysql extends SecurityOne
         } else {
             $user['status'] = 0; // not active until email activation.
         }
-        $success=false;
         try {
             $message='';
             $this->conn->startTransaction();
@@ -681,7 +696,6 @@ class SecurityOneMysql extends SecurityOne
                 $message="User created and activated correctly";
             }
             $this->conn->commit(false);
-            $success=true;
             // register ok, email was send.
             echo $blade->run($this->registerOkTemplate, ['title' => $title
                 , 'subtitle' => $subtitle
@@ -701,6 +715,14 @@ class SecurityOneMysql extends SecurityOne
         }
         return $success;
     }
+
+	/**
+	 * @param string $title
+	 * @param string $subtitle
+	 * @param string $icon
+	 * @param string $iconemail
+	 * @throws \Exception
+	 */
     public function recoverScreen($title="Register Screen",$subtitle="",$icon="",$iconemail="") {
 
         $blade=$this->blade();
@@ -1072,4 +1094,6 @@ class SecurityOneMysql extends SecurityOne
             die(1);
         }
     }
+
+
 }

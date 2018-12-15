@@ -1,6 +1,15 @@
 # SecurityOneMysql
 It's a security framework for PHP. It includes a login screen that could be customized.
 
+[![Packagist](https://img.shields.io/packagist/v/eftec/securityonemysql.svg)](https://packagist.org/packages/eftec/securityonemysql)
+[![Total Downloads](https://poser.pugx.org/eftec/securityonemysql/downloads)](https://packagist.org/packages/eftec/securityonemysql)
+[![License](https://img.shields.io/badge/license-LGPLV3-blue.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)]()
+[![php](https://img.shields.io/badge/php->5.4-green.svg)]()
+[![php](https://img.shields.io/badge/php-7.x-green.svg)]()
+[![Doc](https://img.shields.io/badge/docs-100%25-green.svg)]()
+
+
 ## Features
 - Read user from the database.
 - Role-based security (optional)
@@ -25,6 +34,7 @@ Register Screen
 
 ## version
 
+* 20181215 1.2 Maintenance
 * 20181028 1.1 It fixes a small bug with the extra fields. Now the extra fields are serialized (if any)
 * 20181027 1.0 Stable version.
 * 20181016 0.16 Changes to login and register screen. Now it's possible to select a different template
