@@ -4,8 +4,9 @@ It's a security framework for PHP. It includes a login screen that could be cust
 [![Packagist](https://img.shields.io/packagist/v/eftec/securityonemysql.svg)](https://packagist.org/packages/eftec/securityonemysql)
 [![Total Downloads](https://poser.pugx.org/eftec/securityonemysql/downloads)](https://packagist.org/packages/eftec/securityonemysql)
 [![License](https://img.shields.io/badge/license-LGPLV3-blue.svg)]()
-[![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)]()
-[![php](https://img.shields.io/badge/php->5.4-green.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)]()
+[![composer](https://img.shields.io/badge/composer-%3E1.8-blue.svg)]()
+[![php](https://img.shields.io/badge/php->5.6-green.svg)]()
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
 [![Doc](https://img.shields.io/badge/docs-100%25-green.svg)]()
 
