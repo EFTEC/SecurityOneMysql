@@ -1,8 +1,26 @@
 {
-    "rooturl": "D:\/Dropbox\/www\/currentproject\/SecurityOneMysql",
-    "fileGen": "D:\/Dropbox\/www\/currentproject\/SecurityOneMysql\/example",
-    "savefile": "1",
-    "excludeNS": "",
-    "excludePath": "",
-    "externalPath": ""
+    "application": "AutoloadOne",
+    "generated": "2019/06/08 10:03",
+    "local": {
+        "rooturl": "D:/Dropbox/www/currentproject/SecurityOneMysql/example",
+        "fileGen": "D:/Dropbox/www/currentproject/SecurityOneMysql/example",
+        "savefile": "1",
+        "savefileName": "autoload.php",
+        "excludeNS": "",
+        "excludePath": "",
+        "externalPath": ""
+    },
+    "remote": {
+        "1": {
+            "rooturl": "",
+            "destination": "D:/Dropbox/www/currentproject/SecurityOneMysql/example",
+            "name": ""
+        }
+    },
+    "git": {
+        "1": {
+            "destination": "D:/Dropbox/www/currentproject/SecurityOneMysql/example",
+            "name": "biurad/hello-world 1.* --no-dev"
+        }
+    }
 }

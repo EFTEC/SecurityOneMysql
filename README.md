@@ -4,7 +4,7 @@ It's a security framework for PHP. It includes a login screen that could be cust
 [![Packagist](https://img.shields.io/packagist/v/eftec/securityonemysql.svg)](https://packagist.org/packages/eftec/securityonemysql)
 [![Total Downloads](https://poser.pugx.org/eftec/securityonemysql/downloads)](https://packagist.org/packages/eftec/securityonemysql)
 [![License](https://img.shields.io/badge/license-LGPLV3-blue.svg)]()
-[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.8-blue.svg)]()
 [![php](https://img.shields.io/badge/php->5.6-green.svg)]()
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
@@ -35,6 +35,9 @@ Register Screen
 
 ## version
 
+* 20200125 1.5 
+    * More cleanups. 
+    * Now it uses pdo and eftec/pdoone to connects to the database.
 * 20181215 1.2 Maintenance
 * 20181028 1.1 It fixes a small bug with the extra fields. Now the extra fields are serialized (if any)
 * 20181027 1.0 Stable version.

@@ -1,10 +1,9 @@
 <?php
-use eftec\DaoOne;
+use eftec\PdoOne;
 use eftec\SecurityOneMysql;
 
-include "autoload.php";
-
-$conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
+include "../vendor/autoload.php";
+$conn=new PdoOne('mysql',"127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 
 try {
     $conn->connect();

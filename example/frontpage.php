@@ -1,12 +1,11 @@
 <?php
 
 use eftec\bladeone\BladeOne;
-use eftec\DaoOne;
+use eftec\PdoOne;
 use eftec\SecurityOneMysql;
 
-include "autoload.php";
-
-$conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
+include "../vendor/autoload.php";
+$conn=new PdoOne('mysql',"127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 
 try {
     $conn->connect();
@@ -14,8 +13,10 @@ try {
     die("Error :".$e->getMessage());
 }
 
-$sec=new SecurityOneMysql($conn,"../lib/");
-$sec->validate();
+$sec=new SecurityOneMysql($conn,"../lib/",null,true,true,true);
+$sec->validate(); // it checks if it is logged. If not then it redirect to the login page
+
+
 $obj=$sec->getCurrent(true);
 
 $blade=new BladeOne("view","compile");

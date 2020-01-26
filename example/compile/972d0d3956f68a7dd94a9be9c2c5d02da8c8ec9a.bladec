@@ -62,6 +62,7 @@
  <p>You could browse this page without a session</p>
  <?php if(isset($this->currentUser)): ?>
  <p>The user is authenticated
+ @role('admin')is admin@endrole()
  <?php if (call_user_func($this->authCallBack,'admin')): ?> <b>as administrator</b> <?php endif; ?>
  </p>
 

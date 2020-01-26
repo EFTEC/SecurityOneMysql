@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.2 20181215
+ * @version 1.5 20200125
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -22,8 +22,10 @@ class SecurityOneMysql extends SecurityOne
     const NULLVAL = '__NULLVAL__';
 
     var $debug=false;
+    /** @var BladeOne */
+    private $blade;
 
-    /** @var DaoOne */
+    /** @var PdoOne */
     var $conn;
     /** @var ValidationOne */
     var $val;
@@ -75,15 +77,17 @@ class SecurityOneMysql extends SecurityOne
     private $emailConfig=[];
 
 
-    /**
-     * SecurityOneMysql constructor.
-     * @param DaoOne $conn
-     * @param string $templateRoot
-     * @param array $emailConfig ['user','password','name','smtpserver','smtpport']
-     * @param bool $hasGroup
-     * @param bool $hasRole
-     */
-    public function __construct($conn=null,$templateRoot=null,$emailConfig=null,$hasGroup=true,$hasRole=true,$autoLogin=false)
+	/**
+	 * SecurityOneMysql constructor.
+	 * @param PdoOne $conn
+	 * @param string $templateRoot
+	 * @param array $emailConfig ['user','password','name','smtpserver','smtpport']
+	 * @param bool $hasGroup
+	 * @param bool $hasRole
+	 * @param bool $autoLogin
+	 */
+    public function __construct($conn=null,$templateRoot=null,$emailConfig=null
+	    ,$hasGroup=true,$hasRole=true,$autoLogin=false)
     {
         // injecting
         if ($conn===null) {
@@ -104,7 +108,7 @@ class SecurityOneMysql extends SecurityOne
                 $this->email=getEmail();
             } else {
                 // it's created with constants (if any)
-                if (defined(EFTEC_EMAIL_SMPTSERVER)) {
+                if (@defined(EFTEC_EMAIL_SMPTSERVER)) {
                     $this->emailConfig = ['user' => @EFTEC_EMAIL_USER,
                         'password' => @EFTEC_EMAIL_PASSWORD,
                         'smtpserver' => @EFTEC_EMAIL_SMPTSERVER
@@ -420,11 +424,12 @@ class SecurityOneMysql extends SecurityOne
     }
 
 
-    /**
-     * Validate if the user is logged.
-     * If it is not logged and it's not in the login page, then it's redirected to the login page
-     * If it is logged and it's in the login page, then it's redirected to the frontpage
-     */
+	/**
+	 * Validate if the user is logged.
+	 * If it is not logged and it's not in the login page, then it's redirected to the login page
+	 * If it is logged and it's in the login page, then it's redirected to the frontpage
+	 * @param bool $redirect
+	 */
     public function validate($redirect=true) {
         $currFile=basename($_SERVER['PHP_SELF']);
         $inLoginPage=($currFile==$this->loginPage);
@@ -554,15 +559,17 @@ class SecurityOneMysql extends SecurityOne
     /**
      * @return BladeOne
      */
-    protected  function blade() {
-
+    public  function blade() {
+		if($this->blade!=null) {
+			return $this->blade;
+		}
         if (function_exists("blade")) {
 
-            $blade=blade($this->templateRoot."/views",$this->templateRoot."/compile"); // we inject (if any)
+	        $this->blade=blade($this->templateRoot."/view",$this->templateRoot."/compile"); // we inject (if any)
         } else {
-            $blade=new BladeOne($this->templateRoot."/views",$this->templateRoot."/compile",BladeOne::MODE_AUTO);
+            $this->blade=new BladeOne($this->templateRoot."/view",$this->templateRoot."/compile",BladeOne::MODE_AUTO);
         }
-        return $blade;
+        return $this->blade;
     }
 
 	/**

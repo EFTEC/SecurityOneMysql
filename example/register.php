@@ -1,8 +1,8 @@
 <?php
 
-use eftec\DaoOne;
+use eftec\PdoOne;
 use eftec\SecurityOneMysql;
-include "autoload.php";
+include "../vendor/autoload.php";
 
 define('EFTEC_EMAIL_USER', 'sendme@email.com');
 define('EFTEC_EMAIL_PASSWORD', 'email12345');
@@ -15,7 +15,7 @@ define('EFTEC_EMAIL_REPLYNAME', 'SecurityOne reply me');
 
 
 
-$conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
+$conn=new PdoOne('mysql',"127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 
 
 

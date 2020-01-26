@@ -1,15 +1,12 @@
 <?php
 
 use eftec\bladeone\BladeOne;
-use eftec\DaoOne;
+use eftec\PdoOne;
 use eftec\SecurityOneMysql;
 
-include "../vendor/eftec/securityone/lib/SecurityOne.php";
-include "../vendor/eftec/bladeone/lib/BladeOne.php";
-include "../vendor/eftec/daoone/lib/DaoOne.php";
-include "../lib/SecurityOneMysql.php";
+include "../vendor/autoload.php";
 
-$conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
+$conn=new PdoOne('mysql',"127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 
 try {
     $conn->connect();

@@ -1,15 +1,15 @@
 <?php
 
-use eftec\DaoOne;
+use eftec\PdoOne;
 use eftec\SecurityOneMysql;
 include "../vendor/phpmailer/phpmailer/src/PHPMailer.php";
 include "../vendor/phpmailer/phpmailer/src/SMTP.php";
 include "../vendor/eftec/securityone/lib/SecurityOne.php";
 include "../vendor/eftec/bladeone/lib/BladeOne.php";
-include "../vendor/eftec/daoone/lib/DaoOne.php";
+include "../vendor/eftec/pdoone/lib/PdoOne.php";
 include "../lib/SecurityOneMysql.php";
 
-$conn=new DaoOne("127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
+$conn=new PdoOne('mysql',"127.0.0.1","root","abc.123","securitytest","log.txt"); //CREATE SCHEMA `securitytest` ;
 
 
 
