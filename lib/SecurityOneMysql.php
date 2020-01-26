@@ -268,7 +268,6 @@ class SecurityOneMysql extends SecurityOne
             `{$this->userMap['email']}` as `email`");
         if (count($this->extraFields)) {
             foreach($this->extraFields as $key=>$value) {
-                $value=@$user[$key];
                 $this->conn->select(",`$key`");
             }
         }
@@ -280,7 +279,7 @@ class SecurityOneMysql extends SecurityOne
         try {
             $user = $this->conn->first();
         } catch(\Exception $e) {
-            $this->conn->throwError($e->getMessage());
+            $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
         }
         if (empty($user)) {
             return false;
@@ -299,7 +298,7 @@ class SecurityOneMysql extends SecurityOne
                         ->where("ur.iduser=?", ['i', @$user['iduser']])
                         ->toList();
                 } catch (\Exception $e) {
-                    $this->conn->throwError($e->getMessage());
+                    $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
                     return false;
                 }
                 $groups = [];
@@ -326,7 +325,7 @@ class SecurityOneMysql extends SecurityOne
         try {
             $act = $this->conn->first();
         } catch(\Exception $e) {
-            $this->conn->throwError($e->getMessage());
+            $this->conn->throwError($e->getMessage(),"getActivateFromDB $idActivation");
         }
         if (empty($act)) {
             return false;
@@ -377,10 +376,9 @@ class SecurityOneMysql extends SecurityOne
                 $userDB[$key]=$user[$key];
             }
         }
-        $r=$this->conn->set($userDB)
+        return $this->conn->set($userDB)
             ->from($this->tableUser)
             ->insert();
-        return $r;
     }
 
     /**
@@ -412,8 +410,11 @@ class SecurityOneMysql extends SecurityOne
         @header("location:" . $this->loginPage.'?returnUrl='.$this->safeReturnUrl(@$_SERVER['REQUEST_URI'],$this->initPage));
         die(1);
     }
+
     /**
      * Logout and the session is destroyed. This redirect to the initial page.
+     *
+     * @param bool $redirect if true then it redirects and it stops the execution.
      */
     public function logout($redirect=true) {
         parent::logout();
@@ -507,7 +508,7 @@ class SecurityOneMysql extends SecurityOne
      */
     protected function safeReturnUrl($url,$default) {
         if ($url==null) return $default;
-        return preg_match('#^\/\w+#',$url)?$url:$default;
+        return preg_match('#^/\w+#',$url)?$url:$default;
     }
 
     public function validateUser($us) {
@@ -740,11 +741,12 @@ class SecurityOneMysql extends SecurityOne
         switch ($button) {
             case 'user':
                 $user=$this->val->type('string')->condition('maxlen',null,45)->post('user');
-
+                
                 if (!$user) {
                     $message="Debe ingresar un usuario";
                     $button=false;
                 } else {
+                    $us=false;
                     try {
                         $us = $this->getUserFromDB($user, null, null, null);
                     } catch (\Exception $e) {
@@ -765,6 +767,7 @@ class SecurityOneMysql extends SecurityOne
                     $message="Debe ingresar un correo";
                     $button=false;
                 } else {
+                    $us=false;
                     try {
                         $us = $this->getUserFromDB(null, null, null, $email);
                     } catch (\Exception $e) {
@@ -780,6 +783,7 @@ class SecurityOneMysql extends SecurityOne
             default:
         }
         if ($button) {
+            $uid='';
             try {
                 $idUser = $this->iduser;
                 $uid=$this->generateRandomString();
@@ -1054,6 +1058,7 @@ class SecurityOneMysql extends SecurityOne
      * @param string $title
      * @param string $subtitle
      * @param string $logo
+     * @param array  $viewVariables
      */
     public function loginScreen($title="Login Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219", $viewVariables=[]) {
         $blade=$this->blade();
