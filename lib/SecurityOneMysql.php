@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.5 20200125
+ * @version 1.5.1 20200125
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql

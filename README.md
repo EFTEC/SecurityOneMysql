@@ -35,6 +35,7 @@ Register Screen
 
 ## version
 
+* 20200405 1.5.1 fixed .gitattributes
 * 20200125 1.5 
     * More cleanups. 
     * Now it uses pdo and eftec/pdoone to connects to the database.
