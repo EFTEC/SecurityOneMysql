@@ -1,4 +1,7 @@
 <?php
+/** @noinspection UnknownInspectionInspection */
+
+/** @noinspection PhpUnused */
 
 namespace eftec;
 
@@ -7,6 +10,7 @@ use eftec\bladeone\BladeOne;
 
 use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use RuntimeException;
 
 /**
  * Class SecurityOneMysql
@@ -22,27 +26,27 @@ class SecurityOneMysql extends SecurityOne
     // nullval is used when you want to mark a value as not-selected (null) but you can't do it using string "".
     const NULLVAL = '__NULLVAL__';
 
-    var $debug=false;
+    public $debug=false;
     /** @var BladeOne */
     private $blade;
 
     /** @var PdoOne */
-    var $conn;
+    public $conn;
     /** @var ValidationOne */
-    var $val;
+    public $val;
     /** @var MessageList */
-    var $messageList;
+    public $messageList;
     /** @var PHPMailer */
-    var $emailServer;
+    public $emailServer;
     /** @var bool if it uses group or not. */
-    var $hasGroup=true;
-    var $defaultGroup=['user'];
+    public $hasGroup=true;
+    public $defaultGroup=['user'];
     /** @var bool if it uses group or not. */
-    var $hasRole=true;
-    var $defaultRole='user';
+    public $hasRole=true;
+    public $defaultRole='user';
 
     /** @var string it is where the template will be located. By default it searhces in the /lib folder */
-    var $templateRoot="";
+    public $templateRoot="";
 
     public $loginPage="login.php";
     public $loginTemplate='login';
@@ -65,15 +69,15 @@ class SecurityOneMysql extends SecurityOne
         ,'email'=>'email'];
 
     /** @var array pages that are whitelisted (you could access without a session) */
-    var $whiteList=["login.php","logout.php","register.php","activate.php"
-        ,"recoverPassword.php","changePassword.php"];
+    public $whiteList=["login.php", "logout.php", "register.php", "activate.php"
+                       , "recoverPassword.php", "changePassword.php"];
 
-    var $tableUser="sec_user";
-    var $tableGroup="sec_group";
-    var $tableUserXGroup="sec_userxgroup";
-    var $tableActivation="sec_activation";
+    public $tableUser="sec_user";
+    public $tableGroup="sec_group";
+    public $tableUserXGroup="sec_userxgroup";
+    public $tableActivation="sec_activation";
     /** @var string you can disable cookies by setting this table to empty */
-    var $tableCookie="sec_usercookie";
+    public $tableCookie="sec_usercookie";
     /** @var array  ['user','password','name','smtpserver','smtpport','from','fromname','reply','replyname'] */
     private $emailConfig=[];
 
@@ -107,26 +111,23 @@ class SecurityOneMysql extends SecurityOne
             if (function_exists('getEmail')) {
                 // its injected
                 $this->email=getEmail();
-            } else {
-                // it's created with constants (if any)
-                if (@defined(EFTEC_EMAIL_SMPTSERVER)) {
-                    $this->emailConfig = ['user' => @EFTEC_EMAIL_USER,
-                        'password' => @EFTEC_EMAIL_PASSWORD,
-                        'smtpserver' => @EFTEC_EMAIL_SMPTSERVER
-                        , 'smtpport' => @EFTEC_EMAIL_SMPTPORT
-                        , 'from' => @EFTEC_EMAIL_FROM
-                        , 'fromname' => @EFTEC_EMAIL_FROMNAME
-                    ];
-                    if (defined(@EFTEC_EMAIL_REPLY)) {
-                        $this->emailConfig['reply'] = EFTEC_EMAIL_REPLY;
-                        $this->emailConfig['replyname'] = EFTEC_EMAIL_REPLYNAME;
-                    }
-                    $this->createEmailServer();
-                } else {
-                    // parameter is null, there is not a global function called getEmail() and constant EFTEC_EMAIL_SMPTSERVER is not defined.
-                    // else, email service is disabled.
-                    $this->emailServer=null;
+            } elseif (@defined(EFTEC_EMAIL_SMPTSERVER)) {
+                $this->emailConfig = ['user' => @EFTEC_EMAIL_USER,
+                    'password' => @EFTEC_EMAIL_PASSWORD,
+                    'smtpserver' => @EFTEC_EMAIL_SMPTSERVER
+                    , 'smtpport' => @EFTEC_EMAIL_SMPTPORT
+                    , 'from' => @EFTEC_EMAIL_FROM
+                    , 'fromname' => @EFTEC_EMAIL_FROMNAME
+                ];
+                if (defined(@EFTEC_EMAIL_REPLY)) {
+                    $this->emailConfig['reply'] = EFTEC_EMAIL_REPLY;
+                    $this->emailConfig['replyname'] = EFTEC_EMAIL_REPLYNAME;
                 }
+                $this->createEmailServer();
+            } else {
+                // parameter is null, there is not a global function called getEmail() and constant EFTEC_EMAIL_SMPTSERVER is not defined.
+                // else, email service is disabled.
+                $this->emailServer=null;
             }
         } else {
             // its created with parameters.
@@ -134,10 +135,10 @@ class SecurityOneMysql extends SecurityOne
             $this->createEmailServer();
         }
 
-        $this->templateRoot=($templateRoot===null)?dirname(__FILE__):$templateRoot;
+        $this->templateRoot=($templateRoot===null)? __DIR__ :$templateRoot;
         parent::__construct($autoLogin); // if the session exists then it's logged.
 
-        $this->setLoginFn(function(SecurityOneMysql $sec) {
+        $this->setLoginFn(static function(SecurityOneMysql $sec) {
             return $sec->getUserFromDB($sec->user,null,$sec->password);
         });
 
@@ -156,7 +157,7 @@ class SecurityOneMysql extends SecurityOne
                 ->from($this->tableCookie)
                 ->where(['cookie'=>$sec->cookieID])
                 ->firstScalar();
-            if ($idUser==null) {
+            if ($idUser===null) {
                 // the cookie exists  but it's not associate with a right user (user delete or cookie expired)
                 // so, we delete the cookie
                 unset($_COOKIE['phpcookiesess']);
@@ -239,7 +240,7 @@ class SecurityOneMysql extends SecurityOne
         //$this->emailServer->addAttachment('images/phpmailer_mini.png');
         //send the message, check for errors
         if (!$this->emailServer->send()) {
-            throw new Exception("Mailer Error: " . $this->emailServer->ErrorInfo);
+            throw new RuntimeException("Mailer Error: " . $this->emailServer->ErrorInfo);
         }
 
         return true;
@@ -250,8 +251,9 @@ class SecurityOneMysql extends SecurityOne
      * @param null $idUser
      * @param null $password
      * @param null $email
+     *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function getUserFromDB($user=null,$idUser=null, $password=null,$email=null) {
         // load the user from the database
@@ -273,13 +275,21 @@ class SecurityOneMysql extends SecurityOne
             }
         }
         $this->conn->from($this->tableUser);
-        if ($idUser!==null) $this->conn->where(['iduser'=>$idUser]);
-        if ($user!==null) $this->conn->where(['user'=>$user]);
-        if ($password!==null) $this->conn->where(['password'=>$password]);
-        if ($email!==null) $this->conn->where(['email'=>$email]);
+        if ($idUser!==null) {
+            $this->conn->where(['iduser' => $idUser]);
+        }
+        if ($user!==null) {
+            $this->conn->where(['user' => $user]);
+        }
+        if ($password!==null) {
+            $this->conn->where(['password' => $password]);
+        }
+        if ($email!==null) {
+            $this->conn->where(['email' => $email]);
+        }
         try {
             $user = $this->conn->first();
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
             $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
         }
         if (empty($user)) {
@@ -299,7 +309,7 @@ class SecurityOneMysql extends SecurityOne
                     ->join($this->tableGroup . " r on ur.idgroup=r.idgroup")
                     ->where("ur.iduser=?", [ @$user['iduser']])
                     ->toList();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
                 return false;
             }
@@ -315,8 +325,9 @@ class SecurityOneMysql extends SecurityOne
     }
     /**
      * @param $idActivation
+     *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function getActivateFromDB($idActivation) {
         // load the user from the database
@@ -325,7 +336,7 @@ class SecurityOneMysql extends SecurityOne
         $this->conn->where(['idactivation'=>$idActivation]);
         try {
             $act = $this->conn->first();
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             $this->conn->throwError($e->getMessage(),"getActivateFromDB $idActivation");
         }
         if (empty($act)) {
@@ -341,18 +352,25 @@ class SecurityOneMysql extends SecurityOne
     /**
      * @param array $user ['user'=>'name','password'=>'pwd','role'=>'AAA','fullname'=>'fullname','email'=>'email']
      * @param null|int $idGroup
+     *
      * @return mixed  Returns the id of the new user.
-     * @throws \Exception
+     * @throws Exception
      */
     public function addUser($user, $idGroup=null) {
-        if ($idGroup==null) return $this->addUserOnly($user);
+        if ($idGroup===null) {
+            return $this->addUserOnly($user);
+        }
         try {
             $this->conn->startTransaction();
             $idUser = $this->addUserOnly($user);
-            if ($this->hasGroup) $this->addUserxGroup($idUser,$idGroup);
+            if ($this->hasGroup) {
+                $this->addUserxGroup($idUser, $idGroup);
+            }
             $this->conn->commit();
-        } catch (\Exception $e) {
-            if ($this->conn->transactionOpen) $this->conn->rollback();
+        } catch (Exception $e) {
+            if ($this->conn->transactionOpen) {
+                $this->conn->rollback();
+            }
             throw $e;
         }
         return $idUser;
@@ -360,8 +378,9 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * @param array['user'=>'name','password'=>'pwd','role'=>'AAA','fullname'=>'fullname','email'=>'email'] $user
+     *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function addUserOnly($user) {
         $userDB=[];
@@ -371,7 +390,9 @@ class SecurityOneMysql extends SecurityOne
         $userDB[$this->userMap['email']]=$user['email'];
         $userDB[$this->userMap['fullname']]=$user['fullname'];
         $userDB[$this->userMap['status']]=$user['status'];
-        if ($this->hasRole) $userDB[$this->userMap['role']]=$user['role'];
+        if ($this->hasRole) {
+            $userDB[$this->userMap['role']] = $user['role'];
+        }
         if (count($this->extraFields)) {
             foreach($this->extraFields as $key=>$value) {
                 $userDB[$key]=$user[$key];
@@ -384,8 +405,9 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * @param array $group ['idgroup'=>20,'name'=>'groupname']
+     *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function addGroup($group) {
         return $this->conn->set($group)->from($this->tableGroup)->insert();
@@ -394,8 +416,9 @@ class SecurityOneMysql extends SecurityOne
     /**
      * @param $iduser
      * @param $idgroup
+     *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function addUserxGroup($iduser,$idgroup) {
 
@@ -434,7 +457,7 @@ class SecurityOneMysql extends SecurityOne
 	 */
     public function validate($redirect=true) {
         $currFile=basename($_SERVER['PHP_SELF']);
-        $inLoginPage=($currFile==$this->loginPage);
+        $inLoginPage=($currFile===$this->loginPage);
 
         if (!$this->isLogged) {
             $idUser = $this->getStoreCookie();
@@ -443,7 +466,7 @@ class SecurityOneMysql extends SecurityOne
                 try {
                     $this->getUserFromDB(null, $idUser, null);
                     $this->fixSession(false);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->isLogged = false;
                 }
             }
@@ -455,15 +478,16 @@ class SecurityOneMysql extends SecurityOne
             header("location:".$returnUrl);
             die(1);
         }
-        if (!in_array($currFile,$this->whiteList) && !$this->isLogged) {
-            if ($redirect) $this->backLogin();
+        if ($redirect && !$this->isLogged && !in_array($currFile, $this->whiteList, true)) {
+            $this->backLogin();
         }
 
     }
 
     /**
      * Delete a cookie using the current cookieid
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function deleteCookie() {
         $this->conn->from($this->tableCookie)->where(['cookie'=>$this->cookieID])->delete();
@@ -471,7 +495,8 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * Update a cookie using the current cookieid
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function updateCookie() {
         $this->conn->from($this->tableCookie)->set('datecreated=now()',[])->where(['cookie'=>$this->cookieID])->update();
@@ -480,9 +505,11 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * Update a cookie using the current cookieid
+     *
      * @param $iduser
      * @param $status
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function userChangeStatus($iduser,$status) {
         $this->conn->from($this->tableUser)
@@ -491,9 +518,11 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * Update a cookie using the current cookieid
+     *
      * @param $iduser
      * @param $password
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function userChangePassword($iduser,$password) {
         $pwd=$this->encrypt($password);
@@ -508,21 +537,25 @@ class SecurityOneMysql extends SecurityOne
      * @return mixed
      */
     protected function safeReturnUrl($url,$default) {
-        if ($url==null) return $default;
+        if (!$url) {
+            return $default;
+        }
         return preg_match('#^/\w+#',$url)?$url:$default;
     }
 
     public function validateUser($us) {
         try {
-            if ($this->messageList->errorcount==0) {
+            if ($this->messageList->errorcount===0) {
                 $load = $this->getUserFromDB($us['user']);
                 if ($load!==false) {
                     $this->messageList->addItem('user','User already exist');
                     $load=$this->getUserFromDB(null,null,null,$us['email']);
-                    if ($load!==false) $this->messageList->addItem('email','Email already exist');
+                    if ($load!==false) {
+                        $this->messageList->addItem('email', 'Email already exist');
+                    }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageList->addItem('user','It\'s not possible to validate user');
         }
     }
@@ -532,7 +565,7 @@ class SecurityOneMysql extends SecurityOne
         $characters = '0123456789';
         $randomString = date("m")+date("d")+date("y"); //Ymdhis
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+            $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
         }
         return $randomString;
     }
@@ -541,7 +574,7 @@ class SecurityOneMysql extends SecurityOne
      * @param $uid
      * @param $idUser
      * @param $status
-     * @throws \Exception
+     * @throws Exception
      */
     public function addActivation($uid,$idUser,$status) {
         $this->conn->insert($this->tableActivation
@@ -551,8 +584,10 @@ class SecurityOneMysql extends SecurityOne
 
     /**
      * Delete activation stored in the db by uid
+     *
      * @param $uid string
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function deleteActivation($uid) {
         $this->conn->delete($this->tableActivation,['idactivation',$uid]);
@@ -562,7 +597,7 @@ class SecurityOneMysql extends SecurityOne
      * @return BladeOne
      */
     public  function blade() {
-		if($this->blade!=null) {
+		if($this->blade!==null) {
 			return $this->blade;
 		}
         if (function_exists("blade")) {
@@ -577,7 +612,8 @@ class SecurityOneMysql extends SecurityOne
 	/**
 	 * @param $template
 	 * @param array $viewVariables Variables used for the view. For example, a list to fill a select.
-	 * @throws \Exception
+	 *
+	 * @throws Exception
 	 */
     public function registerCustomScreen($template, $viewVariables=[]) {
         $this->registerTemplate=$template;
@@ -586,10 +622,11 @@ class SecurityOneMysql extends SecurityOne
 
 	/**
 	 * @param string $title
-	 * @param string $subtitle
+     * @param string $subtitle
 	 * @param string $logo
 	 * @param array $viewVariables
-	 * @throws \Exception
+	 *
+	 * @throws Exception
 	 */
     public function registerScreen($title="Register Screen",$subtitle="",$logo="https://avatars3.githubusercontent.com/u/19829219",$viewVariables=[]) {
         $blade=$this->blade();
@@ -621,6 +658,7 @@ class SecurityOneMysql extends SecurityOne
                  //   ->condition('minlen',null,3)
                 //    ->condition('maxlen',null,45)
                 ->post('email')];
+            /** @noinspection NotOptimalIfConditionsInspection */
             if (count($this->extraFields)) {
                 foreach($this->extraFields as $key=>$value) {
                     $user[$key]=$this->val->type('string')
@@ -638,13 +676,10 @@ class SecurityOneMysql extends SecurityOne
             } else {
                 $success=$this->registerNewUser($user,$message,$title,$subtitle,$logo);
             }
-        } else {
-            if (count($this->extraFields)) {
-                foreach($this->extraFields as $key=>$value) {
-                    $user[$key]=$value; // default value.
-                }
+        } elseif (count($this->extraFields)) {
+            foreach($this->extraFields as $key=>$value) {
+                $user[$key]=$value; // default value.
             }
-
         }
         if (!$success) {
             $returnUrl=$this->safeReturnUrl(@$_REQUEST['returnUrl'],$this->initPage);
@@ -659,9 +694,9 @@ class SecurityOneMysql extends SecurityOne
                     , 'title'=>$title
                     , 'subtitle'=>$subtitle
                     , 'logo'=>$logo];
-                $fields=array_merge($fields,$viewVariables);
+                $fields=array_merge($fields, $viewVariables);
                 echo $blade->run($this->registerTemplate, $fields);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 echo "error showing register page";
             }
         } else {
@@ -674,12 +709,13 @@ class SecurityOneMysql extends SecurityOne
 
 	/**
 	 * @param $user
-	 * @param $message
+     * @param $message
 	 * @param $title
 	 * @param $subtitle
 	 * @param $logo
+	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
     private function registerNewUser($user,&$message,$title,$subtitle,$logo) {
         $blade=$this->blade();
@@ -706,14 +742,14 @@ class SecurityOneMysql extends SecurityOne
             }
             $this->conn->commit(false);
             // register ok, email was send.
-            echo $blade->run($this->registerOkTemplate, ['title' => $title
-                , 'subtitle' => $subtitle
-                , 'logo' => $logo
-                , 'error'=>$this->messageList
-                , 'message' => $message
-                , 'email' => $user['email']]);
+            echo $blade->run($this->registerOkTemplate, ['title'      => $title
+                                                         , 'subtitle' => $subtitle
+                                                         , 'logo'     => $logo
+                                                         , 'error'    =>$this->messageList,
+                                                         'message'    => $message
+                                                         , 'email'    => $user['email']]);
             die(1);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (!$this->debug) {
                 $message="Unable to create user or activation ";
             } else {
@@ -730,7 +766,8 @@ class SecurityOneMysql extends SecurityOne
 	 * @param string $subtitle
 	 * @param string $icon
 	 * @param string $iconemail
-	 * @throws \Exception
+	 *
+	 * @throws Exception
 	 */
     public function recoverScreen($title="Register Screen",$subtitle="",$icon="",$iconemail="") {
 
@@ -750,7 +787,7 @@ class SecurityOneMysql extends SecurityOne
                     $us=false;
                     try {
                         $us = $this->getUserFromDB($user, null, null, null);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $message="Usuario no se puede leer";
                         $button=false;
                     }
@@ -771,7 +808,7 @@ class SecurityOneMysql extends SecurityOne
                     $us=false;
                     try {
                         $us = $this->getUserFromDB(null, null, null, $email);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $message="Correo no se puede leer";
                         $button=false;
                     }
@@ -790,7 +827,7 @@ class SecurityOneMysql extends SecurityOne
                 $uid=$this->generateRandomString();
                 // we add an activation
                 $this->addActivation($uid, $idUser, 2);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $message="Unable to create user or activation ".$e->getMessage();
                 $button=false;
             }
@@ -801,14 +838,12 @@ class SecurityOneMysql extends SecurityOne
                 } catch (Exception $e) {
                     $message = "We are unable to send an email, active it here";
                 }
-                if ($button) {
-                    echo $blade->run("recoversend", ['title' => $title
-                        , 'subtitle' => $subtitle
-                        , 'logo' => $iconemail
-                        , 'message' => $message
-                        , 'email' => $this->email]);
-                    die(1);
-                }
+                echo $blade->run("recoversend", ['title' => $title
+                    , 'subtitle' => $subtitle
+                    , 'logo' => $iconemail
+                    , 'message' => $message
+                    , 'email' => $this->email]);
+                die(1);
             }
         }
         if (!$button) {
@@ -819,10 +854,9 @@ class SecurityOneMysql extends SecurityOne
                     , 'returnUrl' => $returnUrl
                     , 'message' => $message
                     , 'title'=>$title
-                    , 'error'=>$this->messageList
-                    , 'subtitle'=>$subtitle
+                    , 'error'=>$this->messageList, 'subtitle'=>$subtitle
                     , 'logo'=>$icon]);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 echo "error showing register page";
             }
         }
@@ -839,11 +873,11 @@ class SecurityOneMysql extends SecurityOne
         $message="";
         try {
             $activate = $this->getActivateFromDB($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $activate=false;
             $message="Unable to activate user";
         }
-        if ($message=="") {
+        if ($message==="") {
             if ($activate !== false) {
 
                 try {
@@ -852,12 +886,12 @@ class SecurityOneMysql extends SecurityOne
                     $message = "Usuario activado. Presione aqui para ir a usuario";
                     $icon=$iconOK;
 
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $message="Unable to change status ".$e->getMessage();
                 }
                 try {
                     @$this->deleteActivation($id);
-                } catch (\Exception $e2) {
+                } catch (Exception $e2) {
                     $message="Unable to delete activation ".$e2->getMessage();
                 }
             } else {
@@ -867,11 +901,11 @@ class SecurityOneMysql extends SecurityOne
 
         try {
             echo $blade->run("activateok", [
-                'message' => $message
-                , 'title'=>$title
-                , 'subtitle'=>$subtitle
+                'message'    => $message,
+                'title'      =>$title
+                , 'subtitle' =>$subtitle
                 , 'logo'=>$icon]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo "error showing register page";
         }
     }
@@ -883,11 +917,11 @@ class SecurityOneMysql extends SecurityOne
         $id=$this->val->type('integer')->def(0)->ifFailThenDefault()->get('id');
         $icon=$iconFail;
         $message="";
-        $valid=true;
+        $valid = true;
         $user="";
         try {
             $activate = $this->getActivateFromDB($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $activate=false;
             $message="Unable Change password";
         }
@@ -896,11 +930,11 @@ class SecurityOneMysql extends SecurityOne
             $valid=false;
         }
 
-        if ($message=="") {
-            $idUser=$activate['iduser'];
+        if ($message==="") {
+            $idUser= $activate['iduser'];
             try {
                 $r = $this->getUserFromDB(null, $idUser);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $r=false;
             }
             if ($r===false) {
@@ -922,7 +956,7 @@ class SecurityOneMysql extends SecurityOne
                         $message="Password changed";
                         $valid=false;
                         @$this->deleteActivation($id);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $message="Unable to change password";
                     }
                 }
@@ -932,24 +966,24 @@ class SecurityOneMysql extends SecurityOne
 
         try {
             echo $blade->run("newpassword", [
-                'message' => $message
-                , 'title'=>$title
-                , 'subtitle'=>$subtitle
-                , 'valid'=>$valid
-                , 'home'=>$this->loginPage
-                , 'error'=>$this->messageList
-                , 'user'=>$user
+                'message'    => $message
+                , 'title'    =>$title
+                , 'subtitle' =>$subtitle
+                , 'valid'    =>$valid
+                , 'home'     =>$this->loginPage,
+                'error'      =>$this->messageList
+                , 'user'     =>$user
                 , 'logo'=>$icon]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo "error showing register page";
         }
     }
     public function logoutScreen() {
         if ($_COOKIE['phpcookiesess']) {
-            $this->cookieID=$_COOKIE['phpcookiesess'];
+            $this->cookieID = $_COOKIE['phpcookiesess'];
             try {
                 @$this->deleteCookie();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
         $this->logout();
@@ -976,8 +1010,8 @@ class SecurityOneMysql extends SecurityOne
             ;";
 
             $this->conn->runMultipleRawQuery($sql, true);
-        } catch (\Exception $e) {
-            $msgError[]= "Note: Table {$this->tableUser} not created (maybe it exists) ".$e->getMessage()."<br>";
+        } catch (Exception $e) {
+            $msgError[]= "Note: Table {$this->tableUser} not created (maybe it exists)\n<br>$sql\n<br>".$e->getMessage()."<br>";
         }
         if ($this->tableCookie) {
             try {
@@ -994,8 +1028,8 @@ class SecurityOneMysql extends SecurityOne
                 ADD INDEX `{$this->tableCookie}_key2` (`cookie` ASC) VISIBLE;                
                 ;";
                 $this->conn->runMultipleRawQuery($sql, true);
-            } catch (\Exception $e) {
-                $msgError[]= "Note: Table {$this->tableCookie} not created (maybe it exists) ".$e->getMessage()."<br>";
+            } catch (Exception $e) {
+                $msgError[]= "Note: Table {$this->tableCookie} not created (maybe it exists)\n<br>$sql\n<br>".$e->getMessage()."<br>";
             }
         }
         if ($this->hasGroup) {
@@ -1005,11 +1039,11 @@ class SecurityOneMysql extends SecurityOne
                 `idgroup` INT NOT NULL,
                 `name` VARCHAR(45) NOT NULL,
                 PRIMARY KEY (`idgroup`));
-                ALTER TABLE ``{$this->tableGroup}`` 
-                ADD UNIQUE INDEX ``{$this->tableGroup}`_key1` (`name` ASC) VISIBLE;";
+                ALTER TABLE `{$this->tableGroup}` 
+                ADD UNIQUE INDEX `{$this->tableGroup}_key1` (`name` ASC) VISIBLE;";
                 $this->conn->runMultipleRawQuery($sql, true);
-            } catch (\Exception $e) {
-                $msgError[] = "Note: Table {$this->tableGroup} not created (maybe it exists) " . $e->getMessage() . "<br>";
+            } catch (Exception $e) {
+                $msgError[] = "Note: Table {$this->tableGroup} not created (maybe it exists)\n<br>$sql\n<br>" . $e->getMessage() . "<br>";
             }
             try {
                 $sql= /** @lang text */
@@ -1019,8 +1053,8 @@ class SecurityOneMysql extends SecurityOne
                     PRIMARY KEY (`iduser`, `idgroup`));
                 ";
                 $this->conn->runRawQuery($sql, array(), false);
-            } catch (\Exception $e) {
-                $msgError[]="Note: Table {$this->tableUserXGroup} not created (maybe it exists) ".$e->getMessage()."<br>";
+            } catch (Exception $e) {
+                $msgError[]="Note: Table {$this->tableUserXGroup} not created (maybe it exists)\n<br>$sql\n<br>".$e->getMessage()."<br>";
             }
         }
 
@@ -1034,8 +1068,8 @@ class SecurityOneMysql extends SecurityOne
             PRIMARY KEY (`idactivation`));";
 
             $this->conn->runMultipleRawQuery($sql, true);
-        } catch (\Exception $e) {
-            $msgError[]= "Note: Table {$this->tableActivation} not created (maybe it exists) ".$e->getMessage()."<br>\n$sql<br>";
+        } catch (Exception $e) {
+            $msgError[]= "Note: Table {$this->tableActivation} not created (maybe it exists)\n<br>$sql\n<br>".$e->getMessage()."<br>\n$sql<br>";
         }
         return $msgError;
     }
@@ -1076,7 +1110,7 @@ class SecurityOneMysql extends SecurityOne
                 ,$password
                 ,$remember=='1');
             $message=(!$logged)?"User or password incorrect":"";
-            if ($this->status == 0 && $logged) {
+            if ($this->status === 0 && $logged) {
                 $message = "User not active";
                 $logged=false;
             }
@@ -1097,7 +1131,7 @@ class SecurityOneMysql extends SecurityOne
                     , 'useCookie'=>$this->useCookie];
                 $param=array_merge($param,$viewVariables);
                 echo $blade->run($this->loginTemplate,$param );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 echo "error showing login page";
             }
         } else {

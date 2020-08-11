@@ -62,8 +62,8 @@
         <p>You could browse this page without a session</p>
         @auth()
             <p>The user is authenticated
-                @role('admin')is admin@endrole()
-                @can('admin') <b>as administrator</b> @endcan
+                @role('admin')is admin @endrole
+                @can('admin') If you can read it, then you can admin @endcan
             </p>
 
         <p class="lead">The current user <b>{{$name}}</b> is member of the next groups</p>

@@ -2,18 +2,18 @@
 <body>
 <form class="form-signin" method="post">
  <div class="text-center mb-4">
- <img class="mb-4" src="<?php echo static::e($logo); ?>" alt="">
+ <img class="mb-4" src="<?php echo \htmlentities($logo, ENT_QUOTES, 'UTF-8', false); ?>" alt="">
  <h1 class="h3 mb-3 font-weight-normal"><?php echo $title; ?></h1>
  <p><?php echo $subtitle; ?></p>
  </div>
 
  <div class="form-label-group">
- <input type="text" id="inputEmail" name="user" class="form-control" placeholder="user" required autofocus value="<?php echo static::e($user); ?>">
+ <input type="text" id="inputEmail" name="user" class="form-control" placeholder="user" required autofocus value="<?php echo \htmlentities($user, ENT_QUOTES, 'UTF-8', false); ?>">
  <label for="inputEmail">User</label>
  </div>
 
  <div class="form-label-group">
- <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required value="<?php echo static::e($password); ?>">
+ <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required value="<?php echo \htmlentities($password, ENT_QUOTES, 'UTF-8', false); ?>">
  <label for="inputPassword">Password</label>
  </div>
  <?php if($useCookie): ?>
@@ -23,9 +23,9 @@
  </label>
  </div>
  <?php endif; ?>
- <input type="hidden" name="returnUrl" value="<?php echo static::e($returnUrl); ?>" />
+ <input type="hidden" name="returnUrl" value="<?php echo \htmlentities($returnUrl, ENT_QUOTES, 'UTF-8', false); ?>" />
  <button class="btn btn-lg btn-primary btn-block" name="button" value="login" type="submit">Sign in</button>
- <p class="mt-5 mb-3 text-muted text-center"><?php echo static::e($message); ?></p>
+ <p class="mt-5 mb-3 text-muted text-center"><?php echo \htmlentities($message, ENT_QUOTES, 'UTF-8', false); ?></p>
 
 
 </form>

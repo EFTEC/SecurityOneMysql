@@ -23,3 +23,656 @@
 2019-06-08T08:49:20-03:00	INFO	insert into `sec_userxgroup` (`iduser`,`idgroup`) values (?,?) param:[1,1,1,1]
 2019-06-08T08:49:20-03:00	INFO	insert into `sec_userxgroup` (`iduser`,`idgroup`) values (?,?) param:[1,1,1,1]
 2019-06-08T08:49:20-03:00	ERROR	Failed to run queryinsert into `sec_userxgroup` (`iduser`,`idgroup`) values (?,?) Cause:SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '1-1' for key 'PRIMARY'. Last query:[insert into `sec_userxgroup` (`iduser`,`idgroup`) values (?,?)]. param:[1,1,1,1]
+2020-08-11T17:50:35-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:50:35-04:00	ERROR	Failed to connect to mysql <br><b>extra:</b>[SQLSTATE[HY000] [1049] Unknown database 'securitytest'] <br><b>last query:</b>[] param:[]
+2020-08-11T17:50:52-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:[]
+2020-08-11T17:50:52-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:[]
+2020-08-11T17:50:52-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:[]
+2020-08-11T17:50:52-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:[]
+2020-08-11T17:50:52-04:00	INFO	                 ALTER TABLE ``sec_group``                  ADD UNIQUE INDEX ``sec_group`_key1` (`name` ASC) VISIBLE param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:50:52-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:50:52-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:51:13-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:51:13-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] <br><b>last query:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] param:[]
+2020-08-11T17:51:13-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:51:13-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] <br><b>last query:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:51:13-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:51:13-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:51:13-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_userxgroupsec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:52:08-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:[]
+2020-08-11T17:52:08-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:[]
+2020-08-11T17:52:08-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:[]
+2020-08-11T17:52:08-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:[]
+2020-08-11T17:52:08-04:00	INFO	                 ALTER TABLE ``sec_group``                  ADD UNIQUE INDEX ``sec_group`_key1` (`name` ASC) VISIBLE param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:52:08-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:52:08-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:54:09-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:54:09-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] <br><b>last query:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] param:[]
+2020-08-11T17:54:09-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:09-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] <br><b>last query:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:09-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:54:09-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:54:09-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_userxgroupsec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:54:41-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:54:41-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] <br><b>last query:</b>[CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                 ] param:[]
+2020-08-11T17:54:41-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:41-04:00	ERROR	mysql:Failed to run query <br><b>extra:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] <br><b>last query:</b>[insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:41-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name) values (?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null]]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:54:41-04:00	INFO	insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:54:41-04:00	ERROR	Failed to prepare <br><b>extra:</b>[SQLSTATE[42S02]: Base table or view not found: 1146 Table 'securitytest.sec_userxgroupsec_groupsec_user' doesn't exist] <br><b>last query:</b>[insert into `sec_userxgroupsec_groupsec_user`  (iduser,password,user,email,fullname,status,role,idgroup,name,iduser,idgroup) values (?,?,?,?,?,?,?,?,?,?,?)] param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null],[8,1,1,null],[9,"user",2,null],[10,1,1,null],[11,1,1,null]]
+2020-08-11T17:56:17-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:56:17-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:56:17-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:56:17-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:56:17-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:56:17-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:56:17-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T17:56:17-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T17:56:17-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T17:56:17-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T17:56:17-04:00	INFO	                 ALTER TABLE ``sec_group``                  ADD UNIQUE INDEX ``sec_group`_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:56:17-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:56:17-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:56:57-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:56:57-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:56:57-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:56:57-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:56:57-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:56:57-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:56:57-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T17:56:57-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T17:56:57-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T17:56:57-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T17:56:57-04:00	INFO	                 ALTER TABLE ``sec_group``                  ADD UNIQUE INDEX ``sec_group`_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:56:57-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:56:57-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:57:43-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:57:43-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:57:43-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:57:43-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:57:43-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:57:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:57:43-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T17:57:43-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T17:57:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T17:57:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T17:57:43-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group`_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:57:43-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:57:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:58:31-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:58:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:58:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:58:32-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:58:32-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:58:32-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:58:32-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:58:32-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:58:32-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T17:58:32-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T17:58:32-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T17:58:32-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T17:58:32-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group` `_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:58:32-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:58:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:59:31-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T17:59:31-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T17:59:31-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T17:59:31-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T17:59:31-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:59:31-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T17:59:31-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T17:59:31-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T17:59:31-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T17:59:31-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T17:59:31-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T17:59:31-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T17:59:32-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T17:59:32-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T17:59:32-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:59:32-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T17:59:32-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T17:59:32-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:00:43-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:00:43-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:00:43-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:00:43-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:00:43-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:00:43-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:00:43-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:00:43-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:00:43-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:00:43-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:00:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:00:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:00:43-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:00:44-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:00:44-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:00:44-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:00:44-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:00:44-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:14:44-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:14:44-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:14:44-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:14:44-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:14:44-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:14:44-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:14:44-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:14:44-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:14:44-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:14:44-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:14:44-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:14:45-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:14:45-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:14:45-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:14:45-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:14:45-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:14:45-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:14:45-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:02-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:02-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:02-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:02-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:02-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:02-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:02-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:22:02-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:22:02-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:22:02-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:22:02-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:02-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:02-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:08-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:09-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:09-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:09-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:09-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:09-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:09-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:22:09-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:22:09-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:22:09-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:22:09-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:09-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:09-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:19-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:19-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:19-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:19-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:19-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:19-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:19-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:22:19-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:22:19-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:22:19-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:22:19-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:19-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:19-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:37-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:37-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:37-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:37-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:37-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:37-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:37-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:22:37-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:22:37-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:22:37-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:22:37-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:37-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:37-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:42-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:22:42-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:22:42-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:22:42-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:22:42-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:42-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:22:42-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:22:42-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:22:43-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:22:43-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:22:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:22:43-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:22:43-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:22:43-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:22:43-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:43-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:22:43-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:22:43-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:23:21-04:00	INFO	connecting to 127.0.0.1 root/*** securitytest param:[]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_activation"]
+2020-08-11T18:23:21-04:00	INFO	drop table `sec_activation`  param:null
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_group"]
+2020-08-11T18:23:21-04:00	INFO	drop table `sec_group`  param:null
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_user"]
+2020-08-11T18:23:21-04:00	INFO	drop table `sec_user`  param:null
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_usercookie"]
+2020-08-11T18:23:21-04:00	INFO	drop table `sec_usercookie`  param:null
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:23:21-04:00	INFO	SELECT * FROM information_schema.tables where table_schema='securitytest' and table_name=? param:["sec_userxgroup"]
+2020-08-11T18:23:21-04:00	INFO	drop table `sec_userxgroup`  param:null
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_user` (             `iduser` INT NOT NULL,             `user` VARCHAR(45) NOT NULL,             `password` VARCHAR(64) NOT NULL,             `role` VARCHAR(64) NOT NULL,             `status` int NOT NULL default 1,             `fullname` VARCHAR(128) NOT NULL,             `email` VARCHAR(45) NOT NULL,                         PRIMARY KEY (`iduser`)) param:null
+2020-08-11T18:23:21-04:00	INFO	             ALTER TABLE `sec_user`              ADD UNIQUE INDEX `sec_user_key1` (`user` ASC) VISIBLE param:null
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_usercookie` (                 `idcookie` INT NOT NULL auto_increment,                 `iduser` int not null,                 `cookie` VARCHAR(64) NOT NULL,                 `datecreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,                 PRIMARY KEY (`idcookie`)) param:null
+2020-08-11T18:23:21-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key1` (`datecreated` ASC) VISIBLE param:null
+2020-08-11T18:23:21-04:00	INFO	                 ALTER TABLE `sec_usercookie`                  ADD INDEX `sec_usercookie_key2` (`cookie` ASC) VISIBLE param:null
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_group` (                 `idgroup` INT NOT NULL,                 `name` VARCHAR(45) NOT NULL,                 PRIMARY KEY (`idgroup`)) param:null
+2020-08-11T18:23:21-04:00	INFO	                 ALTER TABLE `sec_group`                  ADD UNIQUE INDEX `sec_group_key1` (`name` ASC) VISIBLE param:null
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_userxgroup` (                     `iduser` INT NOT NULL,                     `idgroup` VARCHAR(45) NOT NULL,                     PRIMARY KEY (`iduser`, `idgroup`));                  param:[]
+2020-08-11T18:23:21-04:00	INFO	CREATE TABLE `sec_activation` (             `idactivation` int NOT NULL,             `iduser` int NOT NULL,             `status` int NOT NULL,             `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,                        PRIMARY KEY (`idactivation`)) param:[]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,1,1,null],[2,"f73f6c0e0ce038b204abfdad738bb864065f3d9ac7a83b8f19480d6450dbb22b",2,null],[3,"admin",2,null],[4,"johndoe@email.com",2,null],[5,"John Doe",2,null],[6,1,1,null],[7,"admin",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_user`  (iduser,password,user,email,fullname,status,role) values (?,?,?,?,?,?,?) param:[[1,2,1,null],[2,"c2a47dcc257a67fbc98722597631360183ea2021a166f1ae2c72433846e6292e",2,null],[3,"user",2,null],[4,"AnnaSmith@email.com",2,null],[5,"Anna Smith",2,null],[6,1,1,null],[7,"user",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,1,1,null],[2,"user",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,2,1,null],[2,"admin",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_group`  (idgroup,name) values (?,?) param:[[1,3,1,null],[2,"sysop",2,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,1,1,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,1,1,null],[2,2,1,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]
+2020-08-11T18:23:21-04:00	INFO	insert into `sec_userxgroup`  (iduser,idgroup) values (?,?) param:[[1,2,1,null],[2,1,1,null]]

@@ -16,7 +16,24 @@ try {
 }
 
 $sec=new SecurityOneMysql($conn,"../lib/");
-var_dump($sec->createTables());
+
+$tables=['sec_activation','sec_group','sec_user','sec_usercookie','sec_userxgroup'];
+
+foreach($tables as $table) {
+    if ($conn->tableExist($table)) {
+        $conn->dropTable($table);
+    } 
+}
+
+echo "<h2>Errors:</h2>";
+$errors=$sec->createTables();
+if(count($errors)===0) {
+    echo "No error in creation of tables";
+} else {
+    var_dump($errors);    
+}
+
+echo "<br>";
 
 try {
     $sec->addUser(["iduser" => 1
@@ -54,3 +71,5 @@ try {
 } catch (Exception $e) {
     echo "Note: userxgroup not created ".$e->getMessage()."<br>";
 }
+
+echo '<br>And now, you can <a href="login.php">login.php</a>';

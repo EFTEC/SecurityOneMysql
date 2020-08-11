@@ -24,9 +24,10 @@
         }
     },
     "require": {
+        "PHP": "^5.6",
         "eftec/securityone": "^2.1",
         "eftec/pdoone": "^2.0",
-        "eftec/bladeone": "^3.33",
+        "eftec/bladeone": "^3.46.3",
         "phpmailer/phpmailer": "^6.1.4",
         "eftec/validationone": "^1.22",
         "ext-mysqli": "*"

@@ -23,19 +23,11 @@ $blade=new BladeOne("view","compile");
 
 $blade->setAuth($sec->user,$sec->group[0],$sec->group); // integrate security with blade
 
-echo $blade->run("anotherpage",['user'=>$obj['user'],'groups'=>$obj['group'],'name'=>$obj['name']]);
+if($obj===null) {
+    echo $blade->run("anotherpage",['user'=>null,'groups'=>null,'name'=>null]);
+} else {
+    echo $blade->run("anotherpage",['user'=>$obj['user'],'groups'=>$obj['group'],'name'=>$obj['name']]);    
+}
 
 
-die(1);
 
-?>
-<h1>The user <?=$obj['user'];?> is logged</h1>
-Groups:
-<ul>
-    <?php foreach($obj["group"] as $group) {
-        echo "<li>$group</li>";
-    }
-    ?>
-</ul>
-<a href="login.php">login.php</a>
-<a href="logout.php">logout.php</a>
