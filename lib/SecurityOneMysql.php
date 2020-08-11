@@ -4,13 +4,14 @@ namespace eftec;
 
 use eftec\bladeone\BladeOne;
 
-use PHPMailer\PHPMailer\Exception;
+
+use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.5.1 20200125
+ * @version 1.5.2 20200811
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql
@@ -239,9 +240,9 @@ class SecurityOneMysql extends SecurityOne
         //send the message, check for errors
         if (!$this->emailServer->send()) {
             throw new Exception("Mailer Error: " . $this->emailServer->ErrorInfo);
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -283,34 +284,34 @@ class SecurityOneMysql extends SecurityOne
         }
         if (empty($user)) {
             return false;
-        } else {
-            if (count($this->extraFields)) {
-                foreach($this->extraFields as $key=>$value) {
-                    $this->extraFields[$key]=@$user[$key];
-                }
-            }
-            // load the groups (if any)
-            if ($this->hasGroup) {
-                try {
-                    $userxGroup = $this->conn->select("r.name")
-                        ->from($this->tableUserXGroup . " ur")
-                        ->join($this->tableGroup . " r on ur.idgroup=r.idgroup")
-                        ->where("ur.iduser=?", ['i', @$user['iduser']])
-                        ->toList();
-                } catch (\Exception $e) {
-                    $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
-                    return false;
-                }
-                $groups = [];
-                foreach ($userxGroup as $tmp) {
-                    $groups[] = $tmp['name'];
-                }
-            } else {
-                $groups = [];
-            }
-            $this->factoryUser($user['user'],$user['password'],$user['fullname'],$groups,@$user['role'],$user['status'],$user['email'],$user['iduser'],$this->extraFields);
-            return true;
         }
+
+        if (count($this->extraFields)) {
+            foreach($this->extraFields as $key=>$value) {
+                $this->extraFields[$key]=@$user[$key];
+            }
+        }
+        // load the groups (if any)
+        if ($this->hasGroup) {
+            try {
+                $userxGroup = $this->conn->select("r.name")
+                    ->from($this->tableUserXGroup . " ur")
+                    ->join($this->tableGroup . " r on ur.idgroup=r.idgroup")
+                    ->where("ur.iduser=?", [ @$user['iduser']])
+                    ->toList();
+            } catch (\Exception $e) {
+                $this->conn->throwError($e->getMessage(),'from getUserFromDB '.$idUser);
+                return false;
+            }
+            $groups = [];
+            foreach ($userxGroup as $tmp) {
+                $groups[] = $tmp['name'];
+            }
+        } else {
+            $groups = [];
+        }
+        $this->factoryUser($user['user'], $user['password'], $user['fullname'],$groups,@$user['role'], $user['status'], $user['email'], $user['iduser'],$this->extraFields);
+        return true;
     }
     /**
      * @param $idActivation
@@ -329,9 +330,9 @@ class SecurityOneMysql extends SecurityOne
         }
         if (empty($act)) {
             return false;
-        } else {
-            return $act;
         }
+
+        return $act;
     }
     // required('this field is required')::minleght(20)::maxlenght(20)::get('field')
 
@@ -544,7 +545,7 @@ class SecurityOneMysql extends SecurityOne
      */
     public function addActivation($uid,$idUser,$status) {
         $this->conn->insert($this->tableActivation
-            ,['idactivation','i','iduser','i','status','i']
+            ,['idactivation','iduser','status']
             ,[$uid,$idUser,$status]);
     }
 
@@ -554,7 +555,7 @@ class SecurityOneMysql extends SecurityOne
      * @throws \Exception
      */
     public function deleteActivation($uid) {
-        $this->conn->delete($this->tableActivation,['idactivation','i',$uid]);
+        $this->conn->delete($this->tableActivation,['idactivation',$uid]);
     }
 
     /**

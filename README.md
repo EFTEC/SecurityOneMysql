@@ -35,6 +35,7 @@ Register Screen
 
 ## version
 
+* 20200811 1.5.2 Update dependencies.
 * 20200405 1.5.1 fixed .gitattributes
 * 20200125 1.5 
     * More cleanups. 
