@@ -15,7 +15,7 @@ use RuntimeException;
 /**
  * Class SecurityOneMysql
  * This class manages the security.
- * @version 1.5.2 20200811
+ * @version 1.5.3 20200811
  * @package eftec
  * @author Jorge Castro Castillo
  * @copyright (c) Jorge Castro C. MIT License  https://github.com/EFTEC/SecurityOneMysql

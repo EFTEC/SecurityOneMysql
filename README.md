@@ -35,6 +35,7 @@ Register Screen
 
 ## version
 
+* 20200811 1.5.3 php>=5.6
 * 20200811 1.5.2 
   * Update dependencies.    
   * Fixed a bug creating the tables.  
